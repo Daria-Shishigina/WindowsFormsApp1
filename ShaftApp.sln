@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2019
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaftAppForm", "WindowsFormsApp1\ShaftAppForm.csproj", "{1E13B38F-B8DC-4BCD-BBC1-097FD69CE13F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE} = {61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaftApp", "ShaftApp\ShaftApp.csproj", "{61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E13B38F-B8DC-4BCD-BBC1-097FD69CE13F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E13B38F-B8DC-4BCD-BBC1-097FD69CE13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E13B38F-B8DC-4BCD-BBC1-097FD69CE13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E13B38F-B8DC-4BCD-BBC1-097FD69CE13F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E45C61C0-4AF7-4164-8F5E-0335D69BE66A}
+	EndGlobalSection
+EndGlobal
