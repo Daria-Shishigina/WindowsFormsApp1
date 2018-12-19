@@ -122,32 +122,6 @@ namespace ShaftApp
         //public double DiameterBracing {
         //    get { return _diameterBracing; }
         //    set { _diameterBracing = value; } }
-        //public double DiameterHead
-        //{
-        //    get { return _diameterHead; }
-        //    set { _diameterHead = value; }
-        //}
-        //public double DiameterLeg
-        //{
-        //    get { return _diameterLeg; }
-        //    set { _diameterLeg = value; }
-        //}
-        //public double LengthBracing
-        //{
-        //    get { return _lengthBracing; }
-        //    set { _lengthBracing = value; }
-        //}
-        //public double LengthHead
-        //{
-        //    get { return _lengthHead; }
-        //    set { _lengthHead = value; }
-        //}
-        //public double LengthLeg
-        //{
-        //    get { return _lengthLeg; }
-        //    set { _lengthLeg = value; }
-        //}
-
     }
 
 

@@ -52,57 +52,57 @@ namespace ShaftApp.UnitTest
         //Максимальное значение
        
 
-        [TestCase(30, 30, 20, 10, 10, 20, "DiameterBracing",
+        [TestCase(30, 30, 20, 10, 10, 20,
             TestName = "Негативный тест поля DiameterBracing если > 20")]
 
-        [TestCase(10, 50, 20, 10, 10, 20, "DiameterHead",
+        [TestCase(10, 50, 20, 10, 10, 20,
             TestName = "Негативный тест поля DiameterHead если > 40")]
 
-        [TestCase(10, 30, 40, 10, 10, 20, "DiameterLeg",
+        [TestCase(10, 30, 40, 10, 10, 20,
             TestName = "Негативный тест поля DiameterLeg>30")]
 
-        [TestCase(10, 30, 20, 30, 10, 20, "LengthBracing",
+        [TestCase(10, 30, 20, 30, 10, 20, 
             TestName = "Негативный тест поля LengthBracing>25")]
 
 
-        [TestCase(10, 30, 20, 10, 30, 20, "LengthHead",
+        [TestCase(10, 30, 20, 10, 30, 20, 
             TestName = "Негативный тест поля LengthHead>20")]
 
-        [TestCase(10, 30, 20, 10, 10, 50, "LengthLeg",
+        [TestCase(10, 30, 20, 10, 10, 50,
             TestName = "Негативный тест поля LengthLeg>40")]
 
         //Минимальное значение 
 
-        [TestCase(1, 30, 20, 10, 10, 20, "DiameterBracing",
+        [TestCase(1, 30, 20, 10, 10, 20,
             TestName = "Негативный тест поля DiameterBracing если <2")]
 
-        [TestCase(10, 3, 20, 10, 10, 20, "DiameterHead",
+        [TestCase(10, 3, 20, 10, 10, 20,
             TestName = "Негативный тест поля DiameterHead если <4")]
 
-        [TestCase(10, 30, 2, 10, 10, 20, "DiameterLeg",
+        [TestCase(10, 30, 2, 10, 10, 20, 
             TestName = "Негативный тест поля DiameterLeg<3")]
 
-        [TestCase(10, 30, 20, 1, 10, 20, "LengthBracing",
+        [TestCase(10, 30, 20, 1, 10, 20,
             TestName = "Негативный тест поля LengthBracing<2")]
 
 
-        [TestCase(10, 30, 20, 10, 1, 20, "LengthHead",
+        [TestCase(10, 30, 20, 10, 1, 20, 
             TestName = "Негативный тест поля LengthHead<2")]
 
-        [TestCase(10, 30, 20, 10, 10, 3, "LengthLeg",
+        [TestCase(10, 30, 20, 10, 10, 3, //"LengthLeg",
             TestName = "Негативный тест поля LengthLeg<4")]
 
         //Соотношение 
 
-        [TestCase(10, 15, 20, 10, 10, 20, "DiameterLeg",
+        [TestCase(10, 15, 20, 10, 10, 20, 
            TestName = "Негативный тест поля DiameterLeg>DiameterHead")]
 
 
-        [TestCase(20, 30, 15, 10, 10, 20, "DiameterBracing",
+        [TestCase(20, 30, 15, 10, 10, 20,
            TestName = "Негативный тест поля DiameterBracing>DiameterLeg")]
 
 
-        [TestCase(15, 30, 20, 10, 10, 20, "LengthBracing",
+        [TestCase(15, 30, 20, 10, 10, 20, 
            TestName = "Негативный тест поля LengthBracing<DianeterBtacing")]
         
 
