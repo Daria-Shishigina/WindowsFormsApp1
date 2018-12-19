@@ -10,6 +10,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaftAppForm", "WindowsForm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaftApp", "ShaftApp\ShaftApp.csproj", "{61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaftApp.UnitTest", "ShaftApp.UnitTest\ShaftApp.UnitTest.csproj", "{973DE72E-3980-4571-A0DD-341491329067}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE} = {61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +29,10 @@ Global
 		{61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61D76E1B-DA2C-4F39-A3EB-2CEC5F404AAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{973DE72E-3980-4571-A0DD-341491329067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{973DE72E-3980-4571-A0DD-341491329067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{973DE72E-3980-4571-A0DD-341491329067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{973DE72E-3980-4571-A0DD-341491329067}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

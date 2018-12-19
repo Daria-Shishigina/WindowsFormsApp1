@@ -74,7 +74,7 @@ namespace ShaftApp
             }
 
 
-
+       
 
             if (_lengthHead > 20 || _lengthHead < 2)
             {
@@ -90,9 +90,9 @@ namespace ShaftApp
             }
 
 
-            if ( _lengthBracing > 25 || _lengthBracing  < 2)
-                {
-                exeption.Add("Длина крепления должна быть от 2 до 25 см ");
+            if ( _lengthBracing > 25 || _lengthBracing  < 2 || _lengthBracing < _diameterBracing)//
+            {
+                exeption.Add("Длина крепления должна быть больше диаметра крепления, от 2 до 25 см ");
                 // throw new ArgumentException("Длина крепления должна быть меньше длины ножки, от 2 до 25 см \n");
             }
 
@@ -110,21 +110,6 @@ namespace ShaftApp
 
         }
 
-
-
-
-
-        /// <summary>
-        /// Свойства (геттры параметров)
-        /// </summary>
-        //        public double DiameterBracing
-        //        {
-        //            get
-        //            {
-        //                return _diameterBracing;
-        //            }
-        //}
-
         public double DiameterBracing => _diameterBracing;
         public double DiameterHead => _diameterHead;
         public double DiameterLeg => _diameterLeg;
@@ -133,6 +118,35 @@ namespace ShaftApp
         public double LengthLeg => _lengthLeg;
 
 
+
+        //public double DiameterBracing {
+        //    get { return _diameterBracing; }
+        //    set { _diameterBracing = value; } }
+        //public double DiameterHead
+        //{
+        //    get { return _diameterHead; }
+        //    set { _diameterHead = value; }
+        //}
+        //public double DiameterLeg
+        //{
+        //    get { return _diameterLeg; }
+        //    set { _diameterLeg = value; }
+        //}
+        //public double LengthBracing
+        //{
+        //    get { return _lengthBracing; }
+        //    set { _lengthBracing = value; }
+        //}
+        //public double LengthHead
+        //{
+        //    get { return _lengthHead; }
+        //    set { _lengthHead = value; }
+        //}
+        //public double LengthLeg
+        //{
+        //    get { return _lengthLeg; }
+        //    set { _lengthLeg = value; }
+        //}
 
     }
 
