@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.paramGroupBox = new System.Windows.Forms.GroupBox();
             this.diamHeadLabel = new System.Windows.Forms.Label();
             this.diamHeadTextBox = new System.Windows.Forms.TextBox();
@@ -42,7 +43,9 @@
             this.bracingLabel = new System.Windows.Forms.Label();
             this.diamBracingLabel = new System.Windows.Forms.Label();
             this.buildButton = new System.Windows.Forms.Button();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.paramGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // paramGroupBox
@@ -83,6 +86,8 @@
             this.diamHeadTextBox.Name = "diamHeadTextBox";
             this.diamHeadTextBox.Size = new System.Drawing.Size(100, 24);
             this.diamHeadTextBox.TabIndex = 14;
+            this.diamHeadTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.diamHeadTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // headLabel
             // 
@@ -100,6 +105,8 @@
             this.lengthBracingTextBox.Name = "lengthBracingTextBox";
             this.lengthBracingTextBox.Size = new System.Drawing.Size(100, 24);
             this.lengthBracingTextBox.TabIndex = 9;
+            this.lengthBracingTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.lengthBracingTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // diamBracingTextBox
             // 
@@ -107,6 +114,8 @@
             this.diamBracingTextBox.Name = "diamBracingTextBox";
             this.diamBracingTextBox.Size = new System.Drawing.Size(100, 24);
             this.diamBracingTextBox.TabIndex = 10;
+            this.diamBracingTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.diamBracingTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // lengthLegTextBox
             // 
@@ -114,6 +123,8 @@
             this.lengthLegTextBox.Name = "lengthLegTextBox";
             this.lengthLegTextBox.Size = new System.Drawing.Size(100, 24);
             this.lengthLegTextBox.TabIndex = 13;
+            this.lengthLegTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.lengthLegTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // diamLegLabel
             // 
@@ -131,6 +142,8 @@
             this.diamLegTextBox.Name = "diamLegTextBox";
             this.diamLegTextBox.Size = new System.Drawing.Size(100, 24);
             this.diamLegTextBox.TabIndex = 11;
+            this.diamLegTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.diamLegTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // lengthHeadTextBox
             // 
@@ -138,6 +151,8 @@
             this.lengthHeadTextBox.Name = "lengthHeadTextBox";
             this.lengthHeadTextBox.Size = new System.Drawing.Size(100, 24);
             this.lengthHeadTextBox.TabIndex = 12;
+            this.lengthHeadTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.lengthHeadTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // legLabel
             // 
@@ -179,6 +194,10 @@
             this.buildButton.UseVisualStyleBackColor = true;
             this.buildButton.Click += new System.EventHandler(this.buildButton_Click);
             // 
+            // errorProvider
+            // 
+            this.errorProvider.ContainerControl = this;
+            // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -190,6 +209,7 @@
             this.Text = "Form1";
             this.paramGroupBox.ResumeLayout(false);
             this.paramGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -210,6 +230,7 @@
         private System.Windows.Forms.Label bracingLabel;
         private System.Windows.Forms.Label diamBracingLabel;
         private System.Windows.Forms.Button buildButton;
+        private System.Windows.Forms.ErrorProvider errorProvider;
     }
 }
 

@@ -34,6 +34,42 @@ namespace ShaftApp
         /// 
         public Parameters(double diameterBracing,double diameterHead, double diameterLeg, double lengthBracing,  double lengthHead,    double lengthLeg)
         {
+            //TODO: NaN Бесконечность 
+
+
+            if (double.IsNaN(diameterBracing) && !double.IsInfinity(diameterBracing))
+            {
+                throw new ArgumentException("Некорректное значение диаметра крепления.");
+            }
+
+            if (double.IsNaN(diameterHead) && !double.IsInfinity(diameterHead))
+            {
+                throw new ArgumentException("Некорректное значение диаметра головки.");
+            }
+
+            if (double.IsNaN(diameterLeg) && !double.IsInfinity(diameterLeg))
+            {
+                throw new ArgumentException("Некорректное значение диаметра ножки.");
+            }
+
+            if (double.IsNaN(lengthBracing) && !double.IsInfinity(lengthBracing))
+            {
+                throw new ArgumentException("Некорректное значение длины крепления.");
+            }
+
+            if (double.IsNaN(lengthHead) && !double.IsInfinity(lengthHead))
+            {
+                throw new ArgumentException("Некорректное значение длина головки.");
+            }
+
+            if (double.IsNaN(lengthLeg) && !double.IsInfinity(lengthLeg))
+            {
+                throw new ArgumentException("Некорректное значение длины ножки");
+            }
+
+
+
+
             this._diameterBracing = diameterBracing;
             this._diameterHead = diameterHead;
             this._diameterLeg = diameterLeg;

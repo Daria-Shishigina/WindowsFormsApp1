@@ -49,8 +49,47 @@ namespace ShaftApp.UnitTest
         }
 
 
+
+        [TestCase(double.NegativeInfinity, 30, 20, 10, 10,20, 
+       TestName = "Негативный тест на infinity поля DiameterBracing")]
+
+        [TestCase(10, double.NegativeInfinity, 20, 10, 10, 20,
+       TestName = "Негативный тест на infinity поля DiameterHead")]
+
+        [TestCase(10, 30, double.NegativeInfinity, 10, 10, 20,
+       TestName = "Негативный тест на infinity поля DiameterLeg")]
+
+        [TestCase(10, 30, 20, double.NegativeInfinity, 10, 20,
+       TestName = "Негативный тест на infinity поля LengthBracing")]
+
+        [TestCase(10, 30, 20, 10, double.NegativeInfinity, 20,
+       TestName = "Негативный тест на infinity поля LengthHead")]
+        
+        [TestCase(10, 30, 20, 10,10, double.NegativeInfinity,
+       TestName = "Негативный тест на infinity поля LengthLeg")]
+
+
+
+        [TestCase(double.NaN, 30, 20, 10, 10, 20,
+       TestName = "Негативный тест на infinity поля DiameterBracing")]
+
+        [TestCase(10, double.NaN, 20, 10, 10, 20,
+       TestName = "Негативный тест на infinity поля DiameterHead")]
+
+        [TestCase(10, 30, double.NaN, 10, 10, 20,
+       TestName = "Негативный тест на infinity поля DiameterLeg")]
+
+        [TestCase(10, 30, 20, double.NaN, 10, 20,
+       TestName = "Негативный тест на infinity поля LengthBracing")]
+
+        [TestCase(10, 30, 20, 10, double.NaN, 20,
+       TestName = "Негативный тест на infinity поля LengthHead")]
+
+        [TestCase(10, 30, 20, 10, 10, double.NaN,
+       TestName = "Негативный тест на infinity поля LengthLeg")]
+
         //Максимальное значение
-       
+
 
         [TestCase(30, 30, 20, 10, 10, 20,
             TestName = "Негативный тест поля DiameterBracing если > 20")]

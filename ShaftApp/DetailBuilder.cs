@@ -434,6 +434,7 @@ namespace ShaftApp
             //Заполняем массив поверхностей, на которых будет строится фаска
 
             EntityCollectionChamferIn.Add(EntityCollectionPart.GetByIndex(1));
+           
 
             EntityCollectionChamferIn.Add(EntityCollectionPart.GetByIndex(4));
      

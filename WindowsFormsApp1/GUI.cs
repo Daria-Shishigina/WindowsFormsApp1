@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Kompas6API5;
 using ShaftApp;
@@ -40,8 +41,8 @@ namespace ShaftAppForm
 
                 _kompasConnector.Connector();
                 _kompas = _kompasConnector.KompasObject;
-                buildButton.Enabled = false;
-
+                buildButton.Enabled = true;
+              //  buildButton.Enabled = false;
 
                 DetailBuilder detailBuilder = new DetailBuilder(_kompas);
                 detailBuilder.BuildDetail(parameters);
@@ -57,14 +58,38 @@ namespace ShaftAppForm
         }
 
 
-        private void Validate()
+      
+        private void Validate(TextBox text)
         {
+            /////ввод букв ограничение
 
+            double d = 0;
+            if (!double.TryParse(text.Text, out d))
+            {
+                errorProvider.SetError(text, "Некорректно введено значение!");
 
-            //////////////////////////////////////////////ввод букв ограничение цветом+ вывод ошибки 
-
-
+            }
+            else
+            {
+                errorProvider.SetError(text, "");
+            }
         }
 
+        private void TextBox_TextChanged(object sender, EventArgs e)
+        {
+            
+
+            Validate(((TextBox)sender));
+        }
+
+        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            var num = e.KeyChar;
+
+            if (!Char.IsDigit(e.KeyChar) && !((e.KeyChar == ',')) && (num != 8))
+            {
+                e.Handled = true;
+            }
+        }
     }
 }
