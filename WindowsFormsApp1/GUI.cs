@@ -19,6 +19,11 @@ namespace ShaftAppForm
         {
             InitializeComponent();
 
+            threadComboBox.Items.Add("-");
+            threadComboBox.Items.Add("Head");
+            threadComboBox.Items.Add("Leg");
+
+            threadComboBox.SelectedIndex = 0;
         }
 
         private DetailBuilder _detailBuilder;
@@ -37,7 +42,9 @@ namespace ShaftAppForm
                     Convert.ToDouble(diamLegTextBox.Text),
                     Convert.ToDouble(lengthBracingTextBox.Text),
                     Convert.ToDouble(lengthHeadTextBox.Text),
-                    Convert.ToDouble(lengthLegTextBox.Text));
+                    Convert.ToDouble(lengthLegTextBox.Text),
+                    Convert.ToString(threadComboBox.Text));
+
 
                 _kompasConnector.Connector();
                 _kompas = _kompasConnector.KompasObject;
@@ -45,6 +52,9 @@ namespace ShaftAppForm
               //  buildButton.Enabled = false;
 
                 DetailBuilder detailBuilder = new DetailBuilder(_kompas);
+
+                
+
                 detailBuilder.BuildDetail(parameters);
 
             }
@@ -91,5 +101,37 @@ namespace ShaftAppForm
                 e.Handled = true;
             }
         }
+
+
+
+        //private void threadComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    switch(threadComboBox.SelectedIndex)
+        //    {
+        //        case 0:
+        //            {
+        //                break;
+        //            }
+        //        case 1:
+        //            {
+
+
+
+
+
+
+        //                break;
+        //            }
+        //        case 2:
+        //            {
+
+
+
+
+        //                break;
+        //            }
+                
+        //    }
+        //}
     }
 }

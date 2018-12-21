@@ -128,7 +128,7 @@ namespace ShaftApp.UnitTest
         [TestCase(10, 30, 20, 10, 1, 20, 
             TestName = "Негативный тест поля LengthHead<2")]
 
-        [TestCase(10, 30, 20, 10, 10, 3, //"LengthLeg",
+        [TestCase(10, 30, 20, 10, 10, 3,
             TestName = "Негативный тест поля LengthLeg<4")]
 
         //Соотношение 
@@ -156,27 +156,6 @@ namespace ShaftApp.UnitTest
                         lengthBracing, lengthHead,lengthLeg);
                 },   "Должно возникнуть исключение");
         }
-
-        
-
-         
-
-
-        //[Test(Description = " Негативный тест Diameter Head")]
-
-        //public void TestDiameterHead_Less4()
-        //{
-        //    var wrongDiameter = 50;
-        //    _parameters = new Parameters(_diameterBracing,
-        //    _diameterHead, _diameterLeg, _lengthBracing, _lengthHead, _lengthLeg);
-
-        //    Assert.Throws<ArgumentException>(
-        //       () => { _parameters.DiameterHead = wrongDiameter; });
-        //}
-
-
-
-
 
     }
 }

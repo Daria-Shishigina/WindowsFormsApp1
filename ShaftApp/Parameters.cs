@@ -18,6 +18,7 @@ namespace ShaftApp
         private double _lengthBracing;
         private double _lengthHead;
         private double _lengthLeg;
+        private string _thread;     ///////////////////////////////
 
 
 
@@ -32,7 +33,7 @@ namespace ShaftApp
         /// <param name="lengthHead"></param>
         /// <param name="lengthLeg"></param>
         /// 
-        public Parameters(double diameterBracing,double diameterHead, double diameterLeg, double lengthBracing,  double lengthHead,    double lengthLeg)
+        public Parameters(double diameterBracing,double diameterHead, double diameterLeg, double lengthBracing,  double lengthHead,    double lengthLeg, string thread)//////////////
         {
             //TODO: NaN Бесконечность 
 
@@ -76,6 +77,7 @@ namespace ShaftApp
             this._lengthBracing = lengthBracing;
             this._lengthHead = lengthHead;
             this._lengthLeg = lengthLeg;
+            this._thread = thread; ///////////////////////////////////////////////////////
 
               Validate();
 
@@ -152,6 +154,7 @@ namespace ShaftApp
         public double LengthBracing => _lengthBracing;
         public double LengthHead => _lengthHead;
         public double LengthLeg => _lengthLeg;
+        public string Thread => _thread;///////////////////////////////////
 
 
 
