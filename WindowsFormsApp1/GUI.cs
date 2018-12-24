@@ -101,37 +101,5 @@ namespace ShaftAppForm
                 e.Handled = true;
             }
         }
-
-
-
-        //private void threadComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    switch(threadComboBox.SelectedIndex)
-        //    {
-        //        case 0:
-        //            {
-        //                break;
-        //            }
-        //        case 1:
-        //            {
-
-
-
-
-
-
-        //                break;
-        //            }
-        //        case 2:
-        //            {
-
-
-
-
-        //                break;
-        //            }
-                
-        //    }
-        //}
     }
 }

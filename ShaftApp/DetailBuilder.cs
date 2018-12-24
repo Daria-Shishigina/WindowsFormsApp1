@@ -48,12 +48,10 @@ namespace ShaftApp
 
                     _doc3D = _kompas.Document3D();
                     _doc3D.Create(false, true);//FALSE - види­мый режим FALSE - види­мый режим
-
-
+                   
                     BuildHead(parameters.DiameterHead, parameters.LengthHead);
                     BuildLeg(parameters.DiameterLeg, parameters.LengthLeg, parameters.LengthHead);
                     BuildBracing(parameters.DiameterBracing, parameters.LengthBracing, parameters.LengthLeg, parameters.LengthHead);
-
                     //   BuildChamfer(parameters.DiameterHead, parameters.DiameterLeg);
 
                     break;
@@ -63,15 +61,12 @@ namespace ShaftApp
                     _doc3D = _kompas.Document3D();
                     _doc3D.Create(false, true);//FALSE - види­мый режим FALSE - види­мый режим
 
-
                     BuildHead(parameters.DiameterHead, parameters.LengthHead);
                     BuildLeg(parameters.DiameterLeg, parameters.LengthLeg, parameters.LengthHead);
                     BuildBracing(parameters.DiameterBracing, parameters.LengthBracing, parameters.LengthLeg, parameters.LengthHead);
 
                     //   BuildChamfer(parameters.DiameterHead, parameters.DiameterLeg);
                     BuildThread(parameters.DiameterHead, parameters.LengthHead, parameters.DiameterLeg);
-
-                    //  BuildThread2(parameters.DiameterLeg, parameters.LengthLeg, parameters.DiameterBracing,parameters.LengthHead);
 
                     break;
 
@@ -87,7 +82,6 @@ namespace ShaftApp
                     BuildLeg(parameters.DiameterLeg, parameters.LengthLeg, parameters.LengthHead);
                     BuildBracing(parameters.DiameterBracing, parameters.LengthBracing, parameters.LengthLeg, parameters.LengthHead);
 
-                    //   BuildChamfer(parameters.DiameterHead, parameters.DiameterLeg);
                     //BuildThread(parameters.DiameterHead, parameters.LengthHead, parameters.DiameterLeg);
 
                      BuildThread2(parameters.DiameterLeg, parameters.LengthLeg, parameters.DiameterBracing,parameters.LengthHead);
@@ -95,8 +89,6 @@ namespace ShaftApp
                     break;
             }
          
-
-
          //   _doc3D = _kompas.Document3D();
          //   _doc3D.Create(false, true);//FALSE - види­мый режим FALSE - види­мый режим
 
@@ -533,21 +525,17 @@ namespace ShaftApp
             const int o3d_planeXOY = 1;   // Указывает на работу в плостости XOY.
 
             
-           const int o3d_planeXOZ = 2; // Указывает на работу в плостости XOZ.   ....
-
-            
             const int o3d_cylindricSpiral = 56; // Указывает на цилиндрическую спираль
 
             ////Коэффициент для расчета угла в 15°
             double index = (diametr1 / 10) / 1.6667;////////////////////////////////???????????????
 
-            //Расстояние для резьбы
-            double threadLength =height ;
+           
+            double threadLength =height; //Расстояние для резьбы
 
             const int o3d_cutEvolution = 47; // Указывает на создание кинематического вырезания.
 
-            double xStart = (diametr1 / 2);//         //Начальная точка фигуря для резьбы
-
+            double xStart = (diametr1 / 2)- (diametr1/18);//         //Начальная точка фигуря для резьбы   
             #endregion
 
 
@@ -580,56 +568,49 @@ namespace ShaftApp
 
 
 
+            _entity = _part.NewEntity(o3d_sketch);
+            ksSketchDefinition sketchDefinition = _entity.GetDefinition();
+            ksEntity Entity = _part.GetDefaultEntity(o3d_planeXOY);
+            sketchDefinition.SetPlane(Entity);
+            _entity.Create();
+            Document2D document2D = sketchDefinition.BeginEdit();
+
+
+            //document2D.ksLineSeg(xStart, 0, xStart + threadLength / 10, ((index / 4)), 1);
+            //document2D.ksLineSeg(xStart, 0, xStart + threadLength / 10, -(index / 4), 1);
+            //document2D.ksLineSeg(xStart + threadLength / 10, (index / 4), xStart + threadLength / 10, -(index / 4), 1);
 
 
 
-            //_entity = _part.NewEntity(o3d_sketch);
-            //ksSketchDefinition sketchDefinition = _entity.GetDefinition();
-            //ksEntity Entity = _part.GetDefaultEntity(o3d_planeXOY);
-            //sketchDefinition.SetPlane(Entity);
-            //_entity.Create();
-            //Document2D document2D = sketchDefinition.BeginEdit();
-
-            ////Построение верхней части левого отрезка
-            //document2D.ksLineSeg(xStart, 0, xStart, ((index / 4)), 1);
-            ////Построение нижней части левого отрезка
-            //document2D.ksLineSeg(xStart, 0, xStart, (0 - (index / 4)), 1);
-            ////Построение верхней части правого отрезка
-            //document2D.ksLineSeg((xStart - threadLength), 0, (xStart - threadLength),
-            //    ((index * 4) / 2), 1);
-            ////Построение нижней части правого отрезка
-            //document2D.ksLineSeg((xStart - threadLength), 0, (xStart - threadLength),
-            //    (0 - (index * 4) / 2), 1);
-            ////Поединение верхних частей отрезка
-            //document2D.ksLineSeg(xStart, ((index / 4)), (xStart - threadLength),
-            //    ((index * 4) / 2), 1);
-            ////Соединение нижних частей отрезка
-            //document2D.ksLineSeg(xStart, (0 - (index / 4)), (xStart - threadLength),
-            //    (0 - (index * 4) / 2), 1);
+            document2D.ksLineSeg(xStart, (index*2), xStart + threadLength / 10, (index * 2)+((index / 4)), 1);
+            document2D.ksLineSeg(xStart, index*2, xStart + threadLength / 10, (index * 2) - (index / 4), 1);
+            document2D.ksLineSeg(xStart + threadLength / 10, (index * 2)+(index / 4), xStart + threadLength / 10, (index * 2) - (index / 4), 1);
 
 
-            //sketchDefinition.EndEdit();
+            sketchDefinition.EndEdit();
 
-           
 
-            ////Кинематическое вырезание
 
-            //ksEntity entityCutEvolution = _part.NewEntity(o3d_cutEvolution);  //Получаем интерфейс операции кинематического вырезания
+            //Кинематическое вырезание
 
-            //ksCutEvolutionDefinition cutEvolutionDefinition = entityCutEvolution.GetDefinition(); //Получаем интерфейс параметров операции кинематического вырезания
+            ksEntity entityCutEvolution = _part.NewEntity(o3d_cutEvolution);  //Получаем интерфейс операции кинематического вырезания
 
-            //cutEvolutionDefinition.cut = true;     //Вычитане объектов 
+            ksCutEvolutionDefinition cutEvolutionDefinition = entityCutEvolution.GetDefinition(); //Получаем интерфейс параметров операции кинематического вырезания
 
-            //cutEvolutionDefinition.sketchShiftType = 1; //Тип движения (сохранение исходного угла направляющей)
+            cutEvolutionDefinition.cut = true;     //Вычитане объектов 
 
-            //cutEvolutionDefinition.SetSketch(cylindricSpiral); //Устанавливаем эскиз сечения
+            cutEvolutionDefinition.sketchShiftType = 1; //Тип движения (сохранение исходного угла направляющей)
 
-            //ksEntityCollection EntityCollection = (cutEvolutionDefinition.PathPartArray());//Получаем массив объектов
-            //EntityCollection.Clear();
+            cutEvolutionDefinition.SetSketch(_entity);//(cylindricSpiral); //Устанавливаем эскиз сечения
 
-            //EntityCollection.Add(entityCylinderic); //Добавляем в массив эскиз с траекторией (спираль)
+            ksEntityCollection EntityCollection = (cutEvolutionDefinition.PathPartArray());//Получаем массив объектов
+            EntityCollection.Clear();
 
-            //entityCutEvolution.Create(); //Создаем операцию кинематического вырезания
+            EntityCollection.Add(entityCylinderic); //Добавляем в массив эскиз с траекторией (спираль)
+
+            entityCutEvolution.Create(); //Создаем операцию кинематического вырезания
+
+
         }
 
 
@@ -646,32 +627,16 @@ namespace ShaftApp
             #region Константы для резьбы
 
             const int pTop_part = -1;  // Главный компонент, в составе которо­го находится новый или редактируе­мый компонент.
-
-
             const int o3d_planeOffset = 14;  // Указывает на создание эскиза//Смщение плоскости
-
-
             const int o3d_sketch = 5;//Указывает на создание эскиза.
-
-
             const int o3d_planeXOY = 1;   // Указывает на работу в плостости XOY.
-
-
-            const int o3d_planeXOZ = 2; // Указывает на работу в плостости XOZ.   ....
-
-
             const int o3d_cylindricSpiral = 56;// Указывает на цилиндрическую спираль
-
             //Коэффициент для расчета угла в 15°
             double index = (diametr1 / 10) / 1.6667;////////////////////////////////???????????????
-
             //Расстояние для резьбы
             double threadLength = height;///length???????????????????????????diametr1 - diametr2
-
             const int o3d_cutEvolution = 47; // Указывает на создание кинематического вырезания.
-
-            double xStart = diametr1 / 2;// + diametr1 / 100;             //Начальная точка фигуря для резьбы
-
+            double xStart =( diametr1 / 2) - (diametr1 / 10);// + diametr1 / 100;             //Начальная точка фигуря для резьбы
             #endregion
 
 
@@ -719,6 +684,48 @@ namespace ShaftApp
 
             entityCylinderic.Create(); //Создаем спираль
 
+          //Эскиз треуголника
+
+            _entity = _part.NewEntity(o3d_sketch);
+            ksSketchDefinition sketchDefinition = _entity.GetDefinition();
+            ksEntity Entity = _part.GetDefaultEntity(o3d_planeXOY);
+            sketchDefinition.SetPlane(entityOffset);
+            _entity.Create();
+            Document2D document2D = sketchDefinition.BeginEdit();
+
+
+            //document2D.ksLineSeg(xStart, 0, xStart + threadLength / 10, ((index / 4)), 1);
+            //document2D.ksLineSeg(xStart, 0, xStart + threadLength / 10, -(index / 4), 1);
+            //document2D.ksLineSeg(xStart + threadLength / 10, (index / 4), xStart + threadLength / 10, -(index / 4), 1);
+
+
+
+            document2D.ksLineSeg(xStart, (index * 2), xStart + threadLength / 10, (index * 2) + ((index / 4)), 1);
+            document2D.ksLineSeg(xStart, index * 2, xStart + threadLength / 10, (index * 2) - (index / 4), 1);
+            document2D.ksLineSeg(xStart + threadLength / 10, (index * 2) + (index / 4), xStart + threadLength / 10, (index * 2) - (index / 4), 1);
+
+            sketchDefinition.EndEdit();
+
+
+
+            //Кинематическое вырезание
+
+            ksEntity entityCutEvolution = _part.NewEntity(o3d_cutEvolution);  //Получаем интерфейс операции кинематического вырезания
+
+            ksCutEvolutionDefinition cutEvolutionDefinition = entityCutEvolution.GetDefinition(); //Получаем интерфейс параметров операции кинематического вырезания
+
+            cutEvolutionDefinition.cut = true;     //Вычитане объектов 
+
+            cutEvolutionDefinition.sketchShiftType = 1; //Тип движения (сохранение исходного угла направляющей)
+
+            cutEvolutionDefinition.SetSketch(_entity); //Устанавливаем эскиз сечения
+
+            ksEntityCollection EntityCollection = (cutEvolutionDefinition.PathPartArray());//Получаем массив объектов
+            EntityCollection.Clear();
+
+            EntityCollection.Add(entityCylinderic); //Добавляем в массив эскиз с траекторией (спираль)
+
+            entityCutEvolution.Create(); //Создаем операцию кинематического вырезания
 
         }
     }
