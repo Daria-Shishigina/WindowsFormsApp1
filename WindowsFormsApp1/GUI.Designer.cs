@@ -86,12 +86,12 @@
             // 
             // threadComboBox
             // 
+            this.threadComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.threadComboBox.FormattingEnabled = true;
             this.threadComboBox.Location = new System.Drawing.Point(146, 248);
             this.threadComboBox.Name = "threadComboBox";
             this.threadComboBox.Size = new System.Drawing.Size(100, 26);
             this.threadComboBox.TabIndex = 7;
-           // this.threadComboBox.SelectedIndexChanged += new System.EventHandler(this.threadComboBox_SelectedIndexChanged);
             // 
             // diamHeadLabel
             // 

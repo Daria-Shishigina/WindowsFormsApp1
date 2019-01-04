@@ -78,9 +78,6 @@ namespace ShaftApp
         }
 
 
-
-
-
         /// <summary>
         /// Создание головки
         /// </summary>
@@ -475,12 +472,6 @@ namespace ShaftApp
         }
 
 
-
-
-
-
-
-
     /// <summary>
     /// Резьба
     /// </summary>
@@ -606,15 +597,6 @@ namespace ShaftApp
 
         }
 
-
-
-
-
-
-
-
-
-
         private void BuildThread2(double diametr1, double height, double diametr2, double length)
         {
             #region Константы для резьбы
@@ -699,16 +681,24 @@ namespace ShaftApp
 
             var StartY = -0.5 / 2 + 0.01;
 
-            document2D.ksLineSeg(StartX, -length, diametr1 - StartX, -length+StartY, 1);
-            document2D.ksLineSeg(StartX, -length, diametr1 - StartX,-length -StartY, 1);
-            document2D.ksLineSeg(diametr1 - StartX,-length+ StartY, diametr1 - StartX,-length -StartY, 1);
-           
+
+
+            //document2D.ksLineSeg(diametr1/2, -length+(StartY/2), StartX, -length, 1);
+            //document2D.ksLineSeg(diametr1/2, -length + (StartY / 2), StartX, -length + StartY, 1);
+
+            //document2D.ksLineSeg(StartX, -length, StartX, -length+StartY, 1);
+
+
+            document2D.ksLineSeg(StartX, -length, diametr1 - StartX, -length + StartY, 1);
+            document2D.ksLineSeg(StartX, -length, diametr1 - StartX, -length - StartY, 1);
+            document2D.ksLineSeg(diametr1 - StartX, -length + StartY, diametr1 - StartX, -length - StartY, 1);
+
 
             sketchDefinition.EndEdit();
 
 
 
-            ////Кинематическое вырезание
+            //////Кинематическое вырезание
 
             ksEntity entityCutEvolution = _part.NewEntity(o3d_cutEvolution);  //Получаем интерфейс операции кинематического вырезания
 
