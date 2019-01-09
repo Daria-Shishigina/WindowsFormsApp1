@@ -26,10 +26,11 @@ namespace ShaftAppForm
             threadComboBox.SelectedIndex = 0;
         }
 
-        private DetailBuilder _detailBuilder;
-     
+        // private DetailBuilder _detailBuilder;
+        // private Parameters _parameters;
+
         private KompasConnector _kompasConnector = new KompasConnector();
-        private Parameters _parameters;
+     
         private KompasObject _kompas;
 
         private void buildButton_Click(object sender, EventArgs e)
@@ -50,9 +51,8 @@ namespace ShaftAppForm
                 buildButton.Enabled = true;
 
                 DetailBuilder detailBuilder = new DetailBuilder(_kompas);
-               
-                detailBuilder.BuildDetail(parameters);
 
+                detailBuilder.BuildDetail(parameters);
 
             }
 

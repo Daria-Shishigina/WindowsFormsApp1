@@ -38,11 +38,6 @@ namespace ShaftApp
             _kompasObject = (KompasObject)Activator.CreateInstance(type);
             _kompasObject.Visible = true;    
         }
-          
-
-        //CreateDocument3d 
-        //Document 3D свойства
-
 
     }
 }

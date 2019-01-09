@@ -69,7 +69,7 @@
             this.paramGroupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.paramGroupBox.Location = new System.Drawing.Point(12, 12);
             this.paramGroupBox.Name = "paramGroupBox";
-            this.paramGroupBox.Size = new System.Drawing.Size(257, 280);
+            this.paramGroupBox.Size = new System.Drawing.Size(266, 280);
             this.paramGroupBox.TabIndex = 23;
             this.paramGroupBox.TabStop = false;
             this.paramGroupBox.Text = "Параметры детали";
@@ -225,11 +225,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(281, 338);
+            this.ClientSize = new System.Drawing.Size(289, 339);
             this.Controls.Add(this.paramGroupBox);
             this.Controls.Add(this.buildButton);
             this.Name = "GUI";
-            this.Text = "Form1";
+            this.Text = "Shaft";
             this.paramGroupBox.ResumeLayout(false);
             this.paramGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
