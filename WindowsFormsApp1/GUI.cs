@@ -38,27 +38,41 @@ namespace ShaftAppForm
             try
             {
 
-                Parameters parameters = new Parameters (Convert.ToDouble(diamBracingTextBox.Text),
+                Parameters parameters = new Parameters(Convert.ToDouble(diamBracingTextBox.Text),
                     Convert.ToDouble(diamHeadTextBox.Text),
                     Convert.ToDouble(diamLegTextBox.Text),
                     Convert.ToDouble(lengthBracingTextBox.Text),
                     Convert.ToDouble(lengthHeadTextBox.Text),
                     Convert.ToDouble(lengthLegTextBox.Text), Convert.ToString(threadComboBox.Text));//
-                
-                _kompasConnector.Connector();
-                _kompas = _kompasConnector.KompasObject;
-                buildButton.Enabled = true;
 
-                DetailBuilder detailBuilder = new DetailBuilder(_kompas);
+                if (_kompas != null)
+                {
+                    DetailBuilder detailBuilder = new DetailBuilder(_kompas);
 
-                detailBuilder.BuildDetail(parameters);
+                    detailBuilder.BuildDetail(parameters);
 
+                }
+
+                if (_kompas == null)
+                {
+
+                    _kompasConnector.Connector();
+                    _kompas = _kompasConnector.KompasObject;
+                    buildButton.Enabled = true;
+
+                    DetailBuilder detailBuilder = new DetailBuilder(_kompas);
+
+                    detailBuilder.BuildDetail(parameters);
+
+                }
+              
             }
+        
 
             catch (ArgumentException exeption)
 
             {
-               MessageBox.Show(exeption.Message);
+                MessageBox.Show(exeption.Message);
             }
 
         }

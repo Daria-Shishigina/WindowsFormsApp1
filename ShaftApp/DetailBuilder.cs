@@ -85,7 +85,7 @@ namespace ShaftApp
         /// Создание головки
         /// </summary>
 
-        private void BuildHead(double diameter, double length)
+        private void BuildHead(double diameterHead, double lengthHead)
         {
 
 
@@ -112,7 +112,7 @@ namespace ShaftApp
         
             ksDocument2D Document2D = SketchDefinition.BeginEdit();                 //Входим в режим редактирования эскиза
 
-            Document2D.ksCircle(0, 0, diameter / 2, 1);                              //Строим окружность 
+            Document2D.ksCircle(0, 0, diameterHead / 2, 1);                              //Строим окружность 
 
             SketchDefinition.EndEdit();                                              //Выходим из режима редактирования эскиза
 
@@ -134,7 +134,7 @@ namespace ShaftApp
 
             ksBaseExtrusionDefinition BaseExtrusionDefinition = EntityExtrusion.GetDefinition();    //Получаем интерфейс параметров операции "выдавливание"
 
-            BaseExtrusionDefinition.SetSideParam(true, etBlind, length, 0, true);                   //Устанавливаем параметры операции выдавливания
+            BaseExtrusionDefinition.SetSideParam(true, etBlind, lengthHead, 0, true);                   //Устанавливаем параметры операции выдавливания
 
             BaseExtrusionDefinition.SetSketch(_entity);                                             //Устанавливаем эскиз операции выдавливания
 
@@ -151,7 +151,7 @@ namespace ShaftApp
         /// Создание ножки
         /// </summary>
 
-        private void BuildLeg(double diameter,double length,double leng)
+        private void BuildLeg(double diameterLeg,double lengthLeg,double lengthHead)
         {
 
             //Эскиз ножки
@@ -167,7 +167,6 @@ namespace ShaftApp
 
 
             _part = _doc3D.GetPart(pTop_part);                                           //Получаем интерфейс 3D-модели 
-
             ksEntity EntityPlane = _part.GetDefaultEntity(o3d_planeXOY);                 //Получаем интерфейс объекта "плоскость XO"
 
             ///Смещение плоскости
@@ -175,7 +174,7 @@ namespace ShaftApp
             ksEntity PlaneOff = _part.NewEntity(o3d_planeOffset);                       //Получаем интерфейс объекта "смещенная плоскость"
             ksPlaneOffsetDefinition planeOffsetDefinition = PlaneOff.GetDefinition();   //Получаем интерфейс параметров смещенной плоскости 
             planeOffsetDefinition.direction = true;                                     //Направление смещения - прямое
-            planeOffsetDefinition.offset = leng;                                        //Смещение
+            planeOffsetDefinition.offset = lengthHead;                                   //Смещение
             planeOffsetDefinition.SetPlane(EntityPlane);                                //Устанавливаем базовую плоскость
             PlaneOff.Create();                                                           //Создаем эскиз плоскости
 
@@ -186,7 +185,7 @@ namespace ShaftApp
             Entity.Create();                                                            //Создаем эскиз 
             ksDocument2D Document2D = sketchDefinition.BeginEdit();                     //Входим в режим редактирования эскиза
 
-            Document2D.ksCircle(0, 0, diameter / 2, 1);                                 //Строим окружность 
+            Document2D.ksCircle(0, 0, diameterLeg / 2, 1);                                 //Строим окружность 
             sketchDefinition.EndEdit();                                                  //Выходим из режима редактирования эскиза
 
 
@@ -205,7 +204,7 @@ namespace ShaftApp
            
             ksBaseExtrusionDefinition BaseExtrusionDefinition = EntityExtrusion.GetDefinition(); //Получаем интерфейс параметров операции "выдавливание"
 
-            BaseExtrusionDefinition.SetSideParam(true, etBlind, length, 0, true);                 //Устанавливаем параметры операции выдавливания
+            BaseExtrusionDefinition.SetSideParam(true, etBlind, lengthLeg, 0, true);                 //Устанавливаем параметры операции выдавливания
 
             BaseExtrusionDefinition.SetSketch(Entity);                                           //Устанавливаем эскиз операции выдавливания
       
@@ -223,11 +222,11 @@ namespace ShaftApp
         /// Создание крепления
         /// </summary>
 
-        private void BuildBracing(double diameter, double length, double leng,double len)
+        private void BuildBracing(double diameterBracing, double lengthBracing, double lengthLeg,double lengthHead)
         {
              
 
-            //Эскиз ножки
+            //Эскиз крепления
 
             #region Константы для эскиза
         
@@ -250,7 +249,7 @@ namespace ShaftApp
             ksEntity PlaneOff = _part.NewEntity(o3d_planeOffset);                       //Получаем интерфейс объекта "смещенная плоскость"
             ksPlaneOffsetDefinition planeOffsetDefinition = PlaneOff.GetDefinition();  //Получаем интерфейс параметров смещенной плоскости
             planeOffsetDefinition.direction = true;                                     //Направление смещения - прямое 
-            planeOffsetDefinition.offset = leng+len;                                    //Смещение 
+            planeOffsetDefinition.offset = lengthLeg+lengthHead;                                    //Смещение 
             planeOffsetDefinition.SetPlane(EntityPlane);                                //Устанавливаем базовую плоскость 
             PlaneOff.Create();                                                           //Создаем эскиз
 
@@ -264,11 +263,11 @@ namespace ShaftApp
             Entity.Create();                                                            //Создаем эскиз
             ksDocument2D Document2D = sketchDefinition.BeginEdit();                      //Входим в режим редактирования эскиза 
 
-            Document2D.ksCircle(0, 0, diameter / 2, 1);                                   //Строим окружность 
+            Document2D.ksCircle(0, 0, diameterBracing / 2, 1);                                   //Строим окружность 
             sketchDefinition.EndEdit();                                                   //Выходим из режима редактирования эскиза
 
 
-            //Выдавливание ножки 
+            //Выдавливание
 
             #region Константы для выдавливания
 
@@ -283,7 +282,7 @@ namespace ShaftApp
             
             ksBaseExtrusionDefinition BaseExtrusionDefinition = EntityExtrusion.GetDefinition();    //Получаем интерфейс параметров операции "выдавливание
 
-            BaseExtrusionDefinition.SetSideParam(true, etBlind, length, 0, true);                    //Устанавливаем параметры операции выдавливания
+            BaseExtrusionDefinition.SetSideParam(true, etBlind, lengthBracing, 0, true);                    //Устанавливаем параметры операции выдавливания
 
             BaseExtrusionDefinition.SetSketch(Entity);                                              //Устанавливаем эскиз операции выдавливания
           
@@ -300,31 +299,31 @@ namespace ShaftApp
 
             ///Смещение плоскости
 
-            ksEntity PlaneOff2 = _part.NewEntity(o3d_planeOffset);                              //Включаем отображение каркаса
-            ksPlaneOffsetDefinition planeOffsetDefinition2 = PlaneOff2.GetDefinition();         //Получаем интерфейс параметров смещенной плоскости
-            planeOffsetDefinition2.direction = true;                                            //Направление смещения - прямое 
-            planeOffsetDefinition2.offset = leng + len+length;                                  //Смещение
-            planeOffsetDefinition2.SetPlane(EntityPlane);                                       //Устанавливаем базовую плоскост
-            PlaneOff2.Create();                                                                 //Создаем эскиз
+            ksEntity PlaneOffSet = _part.NewEntity(o3d_planeOffset);                              //Включаем отображение каркаса
+            ksPlaneOffsetDefinition planeOffDefinition = PlaneOffSet.GetDefinition();         //Получаем интерфейс параметров смещенной плоскости
+            planeOffDefinition.direction = true;                                            //Направление смещения - прямое 
+            planeOffDefinition.offset = lengthLeg + lengthHead+lengthBracing;                                  //Смещение
+            planeOffDefinition.SetPlane(EntityPlane);                                       //Устанавливаем базовую плоскост
+            PlaneOffSet.Create();                                                                 //Создаем эскиз
 
             
 
-            ksEntity Entity2 = _part.NewEntity(o3d_sketch);                                      ////Получаем интерфейс объекта "Эскиз"
-            ksSketchDefinition sketchDefinition2 = Entity2.GetDefinition();                         //Получаем интерфейс параметров эскиза 
-            sketchDefinition2.SetPlane(PlaneOff2);                                                  //Устанавливаем смещенную плоскость базовой для эскиза
-            Entity2.Create();                                                                       //Создаем эскиз
-            ksDocument2D Document2D2 = sketchDefinition2.BeginEdit();                               //Входим в режим редактирования эскиз
+            ksEntity EntityRectangle = _part.NewEntity(o3d_sketch);                                      ////Получаем интерфейс объекта "Эскиз"
+            ksSketchDefinition sketchDefinitionRectangle = EntityRectangle.GetDefinition();                         //Получаем интерфейс параметров эскиза 
+            sketchDefinitionRectangle.SetPlane(PlaneOffSet);                                                  //Устанавливаем смещенную плоскость базовой для эскиза
+            EntityRectangle.Create();                                                                       //Создаем эскиз
+            ksDocument2D Document2 = sketchDefinitionRectangle.BeginEdit();                               //Входим в режим редактирования эскиз
             ksRectangleParam _par;
             _par = _kompas.GetParamStruct(ko_RectangleParam);                                       //Получаем интерфейс параметров прямоугольника 
 
-            _par.height = diameter / 2;
-            _par.width = diameter;
-            _par.x = -(diameter / 2);
-            _par.y = -(diameter / 4);
+            _par.height = diameterBracing / 2;
+            _par.width = diameterBracing;
+            _par.x = -(diameterBracing / 2);
+            _par.y = -(diameterBracing / 4);
             _par.ang = 0;
             _par.style = 1;
-            Document2D2.ksRectangle(_par, 0);
-            sketchDefinition2.EndEdit();                                                             //Выходим из режима редактирования эскиза
+            Document2.ksRectangle(_par, 0);
+            sketchDefinitionRectangle.EndEdit();                                                             //Выходим из режима редактирования эскиза
 
 
 
@@ -343,9 +342,9 @@ namespace ShaftApp
              
             CutExtrusionDefinition.directionType = 0;                                                   //Прямое направление 
               
-            CutExtrusionDefinition.SetSideParam(true, etBlind, length / 2, 0, false);                   //Устанавливаем параметры выдавливания  
+            CutExtrusionDefinition.SetSideParam(true, etBlind, lengthBracing / 2, 0, false);             //Устанавливаем параметры выдавливания  
           
-            CutExtrusionDefinition.SetSketch(Entity2);                                                   //Устанавливаем экиз операции   
+            CutExtrusionDefinition.SetSketch(EntityRectangle);                                                   //Устанавливаем экиз операции   
         
             EntityCutExtrusion.Create();                                                                 //Создаем операцию вырезания выдавливанием 
 
@@ -372,25 +371,25 @@ namespace ShaftApp
             ///Смещение плоскости
 
 
-            ksEntity PlaneOff3 = _part.NewEntity(o3d_planeOffset);                                      //Получаем интерфейс объекта "смещенная плоскость
-            ksPlaneOffsetDefinition planeOffsetDefinition3 = PlaneOff3.GetDefinition();                 //Получаем интерфейс параметров смещенной плоскости
-            planeOffsetDefinition3.direction = true;                                                   //Направление смещения - прямое 
-            planeOffsetDefinition3.offset = diameter / 2;                                               //Смещение 
-            planeOffsetDefinition3.SetPlane(EntityPlane3);                                               //Устанавливаем базовую плоскость
-            PlaneOff3.Create();                                                                         //Создаем смещенную плоскость 
+            ksEntity PlaneOffHole = _part.NewEntity(o3d_planeOffset);                                      //Получаем интерфейс объекта "смещенная плоскость
+            ksPlaneOffsetDefinition planeOffsetDefinitionHole = PlaneOffHole.GetDefinition();                 //Получаем интерфейс параметров смещенной плоскости
+            planeOffsetDefinitionHole.direction = true;                                                   //Направление смещения - прямое 
+            planeOffsetDefinitionHole.offset = diameterBracing / 2;                                               //Смещение 
+            planeOffsetDefinitionHole.SetPlane(EntityPlane3);                                               //Устанавливаем базовую плоскость
+            PlaneOffHole.Create();                                                                         //Создаем смещенную плоскость 
 
 
 
 
-            ksEntity Entity3 = _part.NewEntity(o3d_sketch);                                             ////Получаем интерфейс объекта "Эскиз"
-            ksSketchDefinition sketchDefinition3 = Entity3.GetDefinition();                              //Получаем интерфейс параметров эскиза
-            sketchDefinition3.SetPlane(PlaneOff3);                                                       //Устанавливаем смещенную плоскость базовой для эскиза 
-            Entity3.Create();                                                                               //Создаем эскиз 
-            ksDocument2D Document2D3 = sketchDefinition3.BeginEdit();                                       //Входим в режим редактирования эскиза 
+            ksEntity EntityHole = _part.NewEntity(o3d_sketch);                                             ////Получаем интерфейс объекта "Эскиз"
+            ksSketchDefinition sketchDefinitionHole = EntityHole.GetDefinition();                              //Получаем интерфейс параметров эскиза
+            sketchDefinitionHole.SetPlane(PlaneOffHole);                                                       //Устанавливаем смещенную плоскость базовой для эскиза 
+            EntityHole.Create();                                                                               //Создаем эскиз 
+            ksDocument2D Document2D3 = sketchDefinitionHole.BeginEdit();                                       //Входим в режим редактирования эскиза 
 
            
-            Document2D3.ksCircle(0, -(0.75*length+leng+len), diameter / 6, 1);                                 //Строим окружность 
-            sketchDefinition3.EndEdit();                                                                    //Выходим из режима редактирования эскиза
+            Document2D3.ksCircle(0, -(0.75*lengthBracing+lengthLeg+lengthHead), diameterBracing / 6, 1);    //Строим окружность 
+            sketchDefinitionHole.EndEdit();                                                                    //Выходим из режима редактирования эскиза
 
 
 
@@ -399,19 +398,19 @@ namespace ShaftApp
 
             
 
-            ksEntity EntityCutExtrusion2 = _part.NewEntity(o3d_cutExtrusion);                               //Получаем интерфейс объекта "операция вырезание выдавливанием" 
+            ksEntity EntityCutExtrusionHole = _part.NewEntity(o3d_cutExtrusion);                               //Получаем интерфейс объекта "операция вырезание выдавливанием" 
    
-            ksCutExtrusionDefinition CutExtrusionDefinition2 = EntityCutExtrusion2.GetDefinition();         //Получаем интерфейс параметров операции
+            ksCutExtrusionDefinition CutExtrusionDefinitionHole = EntityCutExtrusionHole.GetDefinition();         //Получаем интерфейс параметров операции
             
-            CutExtrusionDefinition2.cut = true;                                                             //Вычитание элементов  
+            CutExtrusionDefinitionHole.cut = true;                                                             //Вычитание элементов  
            
-            CutExtrusionDefinition2.directionType = 0;                                                      //Прямое направление 
+            CutExtrusionDefinitionHole.directionType = 0;                                                      //Прямое направление 
             
-            CutExtrusionDefinition2.SetSideParam(true, etBlind, diameter, 0, false);                         //Устанавливаем параметры выдавливания   
+            CutExtrusionDefinitionHole.SetSideParam(true, etBlind, diameterBracing, 0, false);                         //Устанавливаем параметры выдавливания   
            
-            CutExtrusionDefinition2.SetSketch(Entity3);                                                      //Устанавливаем экиз операции   
+            CutExtrusionDefinitionHole.SetSketch(EntityHole);                                                      //Устанавливаем экиз операции   
            
-            EntityCutExtrusion2.Create();                                                                    //Создаем операцию вырезания выдавливанием 
+            EntityCutExtrusionHole.Create();                                                                    //Создаем операцию вырезания выдавливанием 
 
             _doc3D.drawMode = vm_Shaded;                                                                     //Устанавливаем полутоновое изображение модели
           
@@ -471,7 +470,7 @@ namespace ShaftApp
     /// </summary>
   
   
-        private void BuildThread(double diametr1, double height, double diametr2)//,double length
+        private void BuildThread(double diameterHead, double lengthHead, double diameterLeg)//,double length
         {
 
 
@@ -521,9 +520,9 @@ namespace ShaftApp
 
             cylindricSpiral.buildMode = 1;                                                             //Задаем тип построения спирали (Шаг и высота)
 
-            cylindricSpiral.height = height;                                                            //Задаем высоту спирали 
+            cylindricSpiral.height = lengthHead;                                                            //Задаем высоту спирали 
 
-            cylindricSpiral.diam = diametr1;                                                            //Задаем диаметр спирали
+            cylindricSpiral.diam = diameterHead;                                                            //Задаем диаметр спирали
 
             cylindricSpiral.firstAngle = 0;                                                              //Задаем начальный угол спирали
 
@@ -544,13 +543,13 @@ namespace ShaftApp
 
 
             Document2D document2D = sketchDefinition.BeginEdit();
-            var StartX = diametr1 / 2 -(diametr1/100); //
+            var StartX = diameterHead / 2 -(diameterHead/100); //
             var StartY = - 0.5 / 2 + 0.01;
          
     
-            document2D.ksLineSeg(StartX, 0, diametr1-StartX,StartY, 1);
-            document2D.ksLineSeg(StartX, 0, diametr1 - StartX, -StartY, 1);
-            document2D.ksLineSeg(diametr1 - StartX, StartY, diametr1 - StartX, -StartY, 1);
+            document2D.ksLineSeg(StartX, 0, diameterHead-StartX,StartY, 1);
+            document2D.ksLineSeg(StartX, 0, diameterHead - StartX, -StartY, 1);
+            document2D.ksLineSeg(diameterHead - StartX, StartY, diameterHead - StartX, -StartY, 1);
 
          
 
@@ -587,7 +586,7 @@ namespace ShaftApp
 
         }
 
-        private void BuildThread2(double diametr1, double height, double diametr2, double length)
+        private void BuildThread2(double diameterLeg, double lengthLeg, double diameterBracing, double lengthHead)
         {
             #region Константы для резьбы
 
@@ -611,7 +610,7 @@ namespace ShaftApp
 
             ksPlaneOffsetDefinition planeDefinition = entityOffset.GetDefinition();             //Получаем интерфейс параметров смещенной плоскости
 
-            planeDefinition.offset = length;                                                    //Второй случай  //////
+            planeDefinition.offset = lengthHead;                                                    //Второй случай  //////
 
             planeDefinition.direction = true;                                                   //Задаем направление смещенной плоскости
 
@@ -635,9 +634,9 @@ namespace ShaftApp
 
             cylindricSpiral.buildMode = 1;                                                          //Задаем тип построения спирали (Шаг и высота)
 
-            cylindricSpiral.height = height;                                                         //Задаем высоту спирали //////
+            cylindricSpiral.height = lengthLeg;                                                         //Задаем высоту спирали //////
 
-            cylindricSpiral.diam = diametr1;                                                        //Задаем диаметр спирали
+            cylindricSpiral.diam = diameterLeg;                                                        //Задаем диаметр спирали
 
             cylindricSpiral.firstAngle = 0;                                                          //Задаем начальный угол спирали 
 
@@ -665,14 +664,14 @@ namespace ShaftApp
 
             Document2D document2D = sketchDefinition.BeginEdit();
 
-            var StartX = diametr1 / 2 - (diametr1 / 100); //
+            var StartX = diameterLeg / 2 - (diameterLeg / 100); //
 
             var StartY = -0.5 / 2 + 0.01;
 
 
-            document2D.ksLineSeg(StartX, -length, diametr1 - StartX, -length + StartY, 1);
-            document2D.ksLineSeg(StartX, -length, diametr1 - StartX, -length - StartY, 1);
-            document2D.ksLineSeg(diametr1 - StartX, -length + StartY, diametr1 - StartX, -length - StartY, 1);
+            document2D.ksLineSeg(StartX, -lengthHead, diameterLeg - StartX, -lengthHead + StartY, 1);
+            document2D.ksLineSeg(StartX, -lengthHead, diameterLeg - StartX, -lengthHead - StartY, 1);
+            document2D.ksLineSeg(diameterLeg - StartX, -lengthHead + StartY, diameterLeg - StartX, -lengthHead - StartY, 1);
 
 
             sketchDefinition.EndEdit();
