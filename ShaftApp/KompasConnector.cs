@@ -36,7 +36,7 @@ namespace ShaftApp
         {
             var type = Type.GetTypeFromProgID("KOMPAS.Application.5");
             _kompasObject = (KompasObject)Activator.CreateInstance(type);
-            _kompasObject.Visible = true;    
+            _kompasObject.Visible = true;
         }
 
     }

@@ -24,7 +24,7 @@ namespace ShaftApp
         private Document3D _doc3D;
         private ksEntity _entity;
         private ksPart _part;
-        private ksRectangleParam _par; 
+     
  
 
 
@@ -314,7 +314,7 @@ namespace ShaftApp
             sketchDefinition2.SetPlane(PlaneOff2);                                                  //Устанавливаем смещенную плоскость базовой для эскиза
             Entity2.Create();                                                                       //Создаем эскиз
             ksDocument2D Document2D2 = sketchDefinition2.BeginEdit();                               //Входим в режим редактирования эскиз
-
+            ksRectangleParam _par;
             _par = _kompas.GetParamStruct(ko_RectangleParam);                                       //Получаем интерфейс параметров прямоугольника 
 
             _par.height = diameter / 2;

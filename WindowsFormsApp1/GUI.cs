@@ -44,8 +44,7 @@ namespace ShaftAppForm
                     Convert.ToDouble(lengthBracingTextBox.Text),
                     Convert.ToDouble(lengthHeadTextBox.Text),
                     Convert.ToDouble(lengthLegTextBox.Text), Convert.ToString(threadComboBox.Text));//
-
-
+                
                 _kompasConnector.Connector();
                 _kompas = _kompasConnector.KompasObject;
                 buildButton.Enabled = true;
