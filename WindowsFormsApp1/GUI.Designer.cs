@@ -44,7 +44,7 @@
             this.legLabel = new System.Windows.Forms.Label();
             this.bracingLabel = new System.Windows.Forms.Label();
             this.diamBracingLabel = new System.Windows.Forms.Label();
-            this.buildButton = new System.Windows.Forms.Button();
+            this.BuildButton = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.paramGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
@@ -207,15 +207,15 @@
             this.diamBracingLabel.TabIndex = 5;
             this.diamBracingLabel.Text = "Длина крепления:";
             // 
-            // buildButton
+            // BuildButton
             // 
-            this.buildButton.Location = new System.Drawing.Point(185, 298);
-            this.buildButton.Name = "buildButton";
-            this.buildButton.Size = new System.Drawing.Size(84, 28);
-            this.buildButton.TabIndex = 8;
-            this.buildButton.Text = "Построить";
-            this.buildButton.UseVisualStyleBackColor = true;
-            this.buildButton.Click += new System.EventHandler(this.buildButton_Click);
+            this.BuildButton.Location = new System.Drawing.Point(185, 298);
+            this.BuildButton.Name = "BuildButton";
+            this.BuildButton.Size = new System.Drawing.Size(84, 28);
+            this.BuildButton.TabIndex = 8;
+            this.BuildButton.Text = "Построить";
+            this.BuildButton.UseVisualStyleBackColor = true;
+            this.BuildButton.Click += new System.EventHandler(this.BuildButton_Click);
             // 
             // errorProvider
             // 
@@ -227,7 +227,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(289, 339);
             this.Controls.Add(this.paramGroupBox);
-            this.Controls.Add(this.buildButton);
+            this.Controls.Add(this.BuildButton);
             this.Name = "GUI";
             this.Text = "Shaft";
             this.paramGroupBox.ResumeLayout(false);
@@ -252,7 +252,7 @@
         private System.Windows.Forms.Label legLabel;
         private System.Windows.Forms.Label bracingLabel;
         private System.Windows.Forms.Label diamBracingLabel;
-        private System.Windows.Forms.Button buildButton;
+        private System.Windows.Forms.Button BuildButton;
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox threadComboBox;

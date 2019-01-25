@@ -31,7 +31,7 @@ namespace ShaftApp.UnitTest
             StartKompas();
             var builder = new DetailBuilder(_kompas);
             var parameters = new Parameters(10, 30, 20, 10,10,20,"-");//////////////////////////////////
-            var count = 20;
+            var count = 1000;
 
             for (int i = 0; i < count; i++)
             {

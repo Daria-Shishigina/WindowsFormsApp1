@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Kompas6API5;
-using ShaftApp;
+﻿using Kompas6API5;
 
 namespace ShaftApp
 {
@@ -13,26 +7,27 @@ namespace ShaftApp
         /// <summary>
         /// экземпляр компаса 
         /// </summary>
-
-
-       // private KompasConnector _kompasconnector;
-
-
         private KompasObject _kompas;
 
-
+        /// <summary>
+        /// Экземпляр документа 
+        /// </summary>
         private Document3D _doc3D;
+
+        /// <summary>
+        /// Экземпляр  сущности
+        /// </summary>
         private ksEntity _entity;
+
+        /// <summary>
+        /// Экземпляр компонента 
+        /// </summary>
         private ksPart _part;
-     
- 
-
-
-
+    
         /// <summary>
         /// Конструктор 
         /// </summary>
-        /// <param name="kompasConnector"></param>
+        /// <param name="kompas">Экземпляр компаса</param>
         public DetailBuilder(KompasObject kompas)
         {
             this._kompas = kompas;
@@ -41,281 +36,206 @@ namespace ShaftApp
         /// <summary>
         /// Построение вала
         /// </summary>
-        /// <param name="parameters"></param>
-
+        /// <param name="parameters">Параметры делали</param>
         public void BuildDetail(Parameters parameters)
         {
-
-
             _doc3D = _kompas.Document3D();
-            _doc3D.Create(false, true);//FALSE - види­мый режим FALSE - види­мый режим
+            _doc3D.Create(false, true);
 
             BuildHead(parameters.DiameterHead, parameters.LengthHead);
             BuildLeg(parameters.DiameterLeg, parameters.LengthLeg, parameters.LengthHead);
-            BuildBracing(parameters.DiameterBracing, parameters.LengthBracing, parameters.LengthLeg, parameters.LengthHead);
-
+            BuildBracing(parameters.DiameterBracing, parameters.LengthBracing, 
+                parameters.LengthLeg, parameters.LengthHead);
+            BuildBracingCut(parameters.DiameterBracing, parameters.LengthBracing, parameters.LengthLeg, parameters.LengthHead);
+            BuildBracingHole(parameters.DiameterBracing, parameters.LengthBracing, parameters.LengthLeg, parameters.LengthHead);
+            //
 
             switch (parameters.Thread)
             {
                 case "-":
-
-            
-            //           BuildChamfer(parameters.DiameterHead, parameters.DiameterLeg);
-
                     break;
-
-
                 case "Head":
-
-                    BuildThread(parameters.DiameterHead, parameters.LengthHead, parameters.DiameterLeg);
-                   
+                    BuildThreadHead(parameters.DiameterHead, parameters.LengthHead, parameters.DiameterLeg);                 
                     break;
-
-
                 case "Leg":
-
-                    BuildThread2(parameters.DiameterLeg, parameters.LengthLeg, parameters.DiameterBracing, parameters.LengthHead);
-
+                    BuildThreadLeg(parameters.DiameterLeg, parameters.LengthLeg, parameters.DiameterBracing, parameters.LengthHead);
                     break;
             }
         }
 
-
-        /// <summary>
-        /// Создание головки
-        /// </summary>
-
+       /// <summary>
+       /// Создание головки
+       /// </summary>
+       /// <param name="diameterHead">Диаметр головки </param>
+       /// <param name="lengthHead">Длина головки </param>
         private void BuildHead(double diameterHead, double lengthHead)
-        {
-
+        {        
+            #region Константы для головки
+            const int part = -1;          
+            const int sketch = 5;          
+            const int planeXOY = 1;
+            const int baseExtrusion = 24;
+            const int shaded = 3;
+            const int etBlind = 0;
+            #endregion
 
             //Эскиз головки 
-
-            #region Константы для эскиза
-
-            const int pTop_part = -1;            //Главный компонент, в составе которо­го находится новый или редактируе­мый компонент.
-            const int o3d_sketch = 5;           //Эскиз
-            const int o3d_planeXOY = 1;            // Плостость XOY.
-            #endregion
-
-            _part = _doc3D.GetPart(pTop_part);                                  //Получаем интерфейс 3D-модели 
-            
-            _entity = _part.NewEntity(o3d_sketch);                              //Получаем интерфейс объекта "Эскиз"
-           
-            ksSketchDefinition SketchDefinition = _entity.GetDefinition();       //Получаем интерфейс параметров эскиза
-            
-            ksEntity EntityPlane = _part.GetDefaultEntity(o3d_planeXOY);          //Получаем интерфейс объекта "плоскость XOY"
-       
-            SketchDefinition.SetPlane(EntityPlane);                                //Устанавливаем плоскость XOY базовой для эскиза
-
-            _entity.Create();                                                        //Создаем эскиз
-        
-            ksDocument2D Document2D = SketchDefinition.BeginEdit();                 //Входим в режим редактирования эскиза
-
-            Document2D.ksCircle(0, 0, diameterHead / 2, 1);                              //Строим окружность 
-
-            SketchDefinition.EndEdit();                                              //Выходим из режима редактирования эскиза
-
-
-
+            _part = _doc3D.GetPart(part);                                  
+            _entity = _part.NewEntity(sketch);                                       
+            ksSketchDefinition SketchDefinition = _entity.GetDefinition();      
+            ksEntity EntityPlane = _part.GetDefaultEntity(planeXOY);              
+            SketchDefinition.SetPlane(EntityPlane);                             
+            _entity.Create();                                                           
+            ksDocument2D Document2D = SketchDefinition.BeginEdit();             
+            Document2D.ksCircle(0, 0, diameterHead / 2, 1);                     
+            SketchDefinition.EndEdit(); 
 
             //Выдавливание головки 
-
-            #region Константы для выдавливания
-
-
-            const int o3d_baseExtrusion = 24;            //Выдавливание 
-            const int vm_Shaded = 3;            // Полутоновое изображение модели
-            const int etBlind = 0;             //Выдавливание на глубину 
-            #endregion
-
-
-            ksEntity EntityExtrusion = _part.NewEntity(o3d_baseExtrusion);                           //Получаем интерфейс объекта "операция выдавливание"
-
-            ksBaseExtrusionDefinition BaseExtrusionDefinition = EntityExtrusion.GetDefinition();    //Получаем интерфейс параметров операции "выдавливание"
-
-            BaseExtrusionDefinition.SetSideParam(true, etBlind, lengthHead, 0, true);                   //Устанавливаем параметры операции выдавливания
-
-            BaseExtrusionDefinition.SetSketch(_entity);                                             //Устанавливаем эскиз операции выдавливания
-
-            EntityExtrusion.Create();                                                               //Создаем операцию выдавливания
-
-            _doc3D.drawMode = vm_Shaded;                                                            //Устанавливаем полутоновое изображение модели
-
-            _doc3D.shadedWireframe = true;                                                           //Включаем отображение каркаса
-
+            ksEntity EntityExtrusion = _part.NewEntity(baseExtrusion);                        
+            ksBaseExtrusionDefinition BaseExtrusionDefinition = EntityExtrusion.GetDefinition();  
+            BaseExtrusionDefinition.SetSideParam(true, etBlind, lengthHead, 0, true);             
+            BaseExtrusionDefinition.SetSketch(_entity);                                           
+            EntityExtrusion.Create();                                                             
+            _doc3D.drawMode = shaded;                                                          
+            _doc3D.shadedWireframe = true;                                                        
         }
 
-
-        /// <summary>
-        /// Создание ножки
-        /// </summary>
-
+     /// <summary>
+     /// Создание ножки
+     /// </summary>
+     /// <param name="diameterLeg">Диаметр ножки</param>
+     /// <param name="lengthLeg">Длина ножки</param>
+     /// <param name="lengthHead">Длина головки </param>
         private void BuildLeg(double diameterLeg,double lengthLeg,double lengthHead)
         {
+            #region Константы для ножки
+            const int part = -1;          
+            const int sketch = 5;          
+            const int planeXOY = 1;        
+            const int planeOffset = 14;
+            const int baseExtrusion = 24;
+            const int shaded = 3;
+            const int etBlind = 0;
+            #endregion
+
+            _part = _doc3D.GetPart(part);                                        
+            ksEntity EntityPlane = _part.GetDefaultEntity(planeXOY);   
+            
+            ///Смещение плоскости
+            ksEntity PlaneOff = _part.NewEntity(planeOffset);                     
+            ksPlaneOffsetDefinition planeOffsetDefinition = PlaneOff.GetDefinition(); 
+            planeOffsetDefinition.direction = true;                                   
+            planeOffsetDefinition.offset = lengthHead;                                
+            planeOffsetDefinition.SetPlane(EntityPlane);                              
+            PlaneOff.Create();
 
             //Эскиз ножки
-
-            #region Константы для эскиза
-
-            const int pTop_part = -1;             // Главный компонент, в составе которо­го находится новый или редактируе­мый компонент.
-            const int o3d_sketch = 5;           //Эскиз
-            const int o3d_planeXOY = 1;            // Плоскость XOY.
-            const int o3d_planeOffset = 14;          //Выдавливание вырезанием 
-
-            #endregion
-
-
-            _part = _doc3D.GetPart(pTop_part);                                           //Получаем интерфейс 3D-модели 
-            ksEntity EntityPlane = _part.GetDefaultEntity(o3d_planeXOY);                 //Получаем интерфейс объекта "плоскость XO"
-
-            ///Смещение плоскости
-
-            ksEntity PlaneOff = _part.NewEntity(o3d_planeOffset);                       //Получаем интерфейс объекта "смещенная плоскость"
-            ksPlaneOffsetDefinition planeOffsetDefinition = PlaneOff.GetDefinition();   //Получаем интерфейс параметров смещенной плоскости 
-            planeOffsetDefinition.direction = true;                                     //Направление смещения - прямое
-            planeOffsetDefinition.offset = lengthHead;                                   //Смещение
-            planeOffsetDefinition.SetPlane(EntityPlane);                                //Устанавливаем базовую плоскость
-            PlaneOff.Create();                                                           //Создаем эскиз плоскости
-
-
-            ksEntity Entity = _part.NewEntity(o3d_sketch);                              ////Получаем интерфейс объекта "Эскиз"
-            ksSketchDefinition sketchDefinition = Entity.GetDefinition();               //Получаем интерфейс параметров эскиза
-            sketchDefinition.SetPlane(PlaneOff);                                        //Устанавливаем смещенную плоскость базовой для эскиза 
-            Entity.Create();                                                            //Создаем эскиз 
-            ksDocument2D Document2D = sketchDefinition.BeginEdit();                     //Входим в режим редактирования эскиза
-
-            Document2D.ksCircle(0, 0, diameterLeg / 2, 1);                                 //Строим окружность 
-            sketchDefinition.EndEdit();                                                  //Выходим из режима редактирования эскиза
-
-
-            //Выдавливание ножки 
-
-            #region Константы для выдавливания
-
- 
-            const int o3d_baseExtrusion = 24;           //Выдавливание
-            const int vm_Shaded = 3;            // Полутоновое изображение модели
-            const int etBlind = 0;           //Тип выдавливания. Строго на глубину
-            #endregion
-
-
-            ksEntity EntityExtrusion = _part.NewEntity(o3d_baseExtrusion);                       //Получаем интерфейс объекта "операция выдавливание"
-           
-            ksBaseExtrusionDefinition BaseExtrusionDefinition = EntityExtrusion.GetDefinition(); //Получаем интерфейс параметров операции "выдавливание"
-
-            BaseExtrusionDefinition.SetSideParam(true, etBlind, lengthLeg, 0, true);                 //Устанавливаем параметры операции выдавливания
-
-            BaseExtrusionDefinition.SetSketch(Entity);                                           //Устанавливаем эскиз операции выдавливания
-      
-            EntityExtrusion.Create();                                                             //Создаем операцию выдавливания
-
-            _doc3D.drawMode = vm_Shaded;                                                          //Устанавливаем полутоновое изображение модели
-      
-            _doc3D.shadedWireframe = true;                                                        //Включаем отображение каркаса
-
+            ksEntity Entity = _part.NewEntity(sketch);                            
+            ksSketchDefinition sketchDefinition = Entity.GetDefinition();             
+            sketchDefinition.SetPlane(PlaneOff);                                      
+            Entity.Create();                                                          
+            ksDocument2D Document2D = sketchDefinition.BeginEdit();                   
+            Document2D.ksCircle(0, 0, diameterLeg / 2, 1);                            
+            sketchDefinition.EndEdit(); 
+            
+            //ВЫдавливание ножки
+            ksEntity EntityExtrusion = _part.NewEntity(baseExtrusion);                       
+            ksBaseExtrusionDefinition BaseExtrusionDefinition = EntityExtrusion.GetDefinition();
+            BaseExtrusionDefinition.SetSideParam(true, etBlind, lengthLeg, 0, true);            
+            BaseExtrusionDefinition.SetSketch(Entity);                                          
+            EntityExtrusion.Create();                                                           
+            _doc3D.drawMode = shaded;                                                        
+            _doc3D.shadedWireframe = true;                                                      
         }
-
-
-
-        /// <summary>
-        /// Создание крепления
-        /// </summary>
-
+        
+    /// <summary>
+    /// Создание крепления
+    /// </summary>
+    /// <param name="diameterBracing">Диаметр крепления</param>
+    /// <param name="lengthBracing">Длина крепления</param>
+    /// <param name="lengthLeg">Длина ножки</param>
+    /// <param name="lengthHead">Длина головки</param>
         private void BuildBracing(double diameterBracing, double lengthBracing, double lengthLeg,double lengthHead)
         {
-             
+            #region Константы для крепления
+            const int part = -1;  
+            const int sketch = 5; 
+            const int planeXOY = 1; 
+            const int planeOffset = 14;
+            const int baseExtrusion = 24;
+            const int shaded = 3;
+            const int etBlind = 0;
+            #endregion
+
+            _part = _doc3D.GetPart(part);                                        
+            ksEntity EntityPlane = _part.GetDefaultEntity(planeXOY);
+            
+            ///Смещение плоскости
+            ksEntity PlaneOff = _part.NewEntity(planeOffset);                     
+            ksPlaneOffsetDefinition planeOffsetDefinition = PlaneOff.GetDefinition(); 
+            planeOffsetDefinition.direction = true;                                   
+            planeOffsetDefinition.offset = lengthLeg+lengthHead;                      
+            planeOffsetDefinition.SetPlane(EntityPlane);                              
+            PlaneOff.Create();
 
             //Эскиз крепления
+            ksEntity Entity = _part.NewEntity(sketch);                            
+            ksSketchDefinition sketchDefinition = Entity.GetDefinition();             
+            sketchDefinition.SetPlane(PlaneOff);                                      
+            Entity.Create();                                                          
+            ksDocument2D Document2D = sketchDefinition.BeginEdit();                   
+            Document2D.ksCircle(0, 0, diameterBracing / 2, 1);                        
+            sketchDefinition.EndEdit();  
+            
+            //Выдавливание крепления
+            ksEntity EntityExtrusion = _part.NewEntity(baseExtrusion);                        
+            ksBaseExtrusionDefinition BaseExtrusionDefinition = EntityExtrusion.GetDefinition();  
+            BaseExtrusionDefinition.SetSideParam(true, etBlind, lengthBracing, 0, true);          
+            BaseExtrusionDefinition.SetSketch(Entity);                                            
+            EntityExtrusion.Create();                                                             
+            _doc3D.drawMode = shaded;                                                          
+            _doc3D.shadedWireframe = true;                                                        
+        }
 
-            #region Константы для эскиза
-        
-            const int pTop_part = -1;    // Главный компонент, в составе которо­го находится новый или редактируе­мый компонент.  
-            const int o3d_sketch = 5; //Эскиз
-            const int o3d_planeXOY = 1;   // Плоскость XOY.
-            const int o3d_planeOffset = 14;//Смещённая плоскость
-            const int ko_RectangleParam = 91;//Прямоугольник по центру
-
+        /// <summary>
+        /// Создане выреза крепления
+        /// </summary>
+        /// <param name="diameterBracing">Диаметр крепления</param>
+        /// <param name="lengthBracing">Длина крепления</param>
+        /// <param name="lengthLeg">Длина ножки</param>
+        /// <param name="lengthHead">Длина головки</param>
+        private void BuildBracingCut(double diameterBracing, double lengthBracing, double lengthLeg, double lengthHead)
+        {
+            #region Константы для выреза крепления
+            const int part = -1;
+            const int sketch = 5;
+            const int planeXOY = 1;
+            const int planeOffset = 14;
+            const int rectangleParam = 91;
+            const int shaded = 3;
+            const int etBlind = 0;
+            const int cutExtrusion = 26;
             #endregion
 
+            _part = _doc3D.GetPart(part);
+            ksEntity EntityPlane = _part.GetDefaultEntity(planeXOY);
 
-            _part = _doc3D.GetPart(pTop_part);                                           //Получаем интерфейс 3D-модели 
+            //Смещение плоскости
+            ksEntity PlaneOffSet = _part.NewEntity(planeOffset);
+            ksPlaneOffsetDefinition planeOffDefinition = PlaneOffSet.GetDefinition();
+            planeOffDefinition.direction = true;
+            planeOffDefinition.offset = lengthLeg + lengthHead + lengthBracing;
+            planeOffDefinition.SetPlane(EntityPlane);
+            PlaneOffSet.Create();
 
-            ksEntity EntityPlane = _part.GetDefaultEntity(o3d_planeXOY);                 //Получаем интерфейс объекта "плоскость XO"
-
-
-            ///Смещение плоскости
-
-            ksEntity PlaneOff = _part.NewEntity(o3d_planeOffset);                       //Получаем интерфейс объекта "смещенная плоскость"
-            ksPlaneOffsetDefinition planeOffsetDefinition = PlaneOff.GetDefinition();  //Получаем интерфейс параметров смещенной плоскости
-            planeOffsetDefinition.direction = true;                                     //Направление смещения - прямое 
-            planeOffsetDefinition.offset = lengthLeg+lengthHead;                                    //Смещение 
-            planeOffsetDefinition.SetPlane(EntityPlane);                                //Устанавливаем базовую плоскость 
-            PlaneOff.Create();                                                           //Создаем эскиз
-
-
-
-        
-
-            ksEntity Entity = _part.NewEntity(o3d_sketch);                              ////Получаем интерфейс объекта "Эскиз"
-            ksSketchDefinition sketchDefinition = Entity.GetDefinition();               //Получаем интерфейс параметров эскиза 
-            sketchDefinition.SetPlane(PlaneOff);                                        //Устанавливаем смещенную плоскость базовой для эскиза 
-            Entity.Create();                                                            //Создаем эскиз
-            ksDocument2D Document2D = sketchDefinition.BeginEdit();                      //Входим в режим редактирования эскиза 
-
-            Document2D.ksCircle(0, 0, diameterBracing / 2, 1);                                   //Строим окружность 
-            sketchDefinition.EndEdit();                                                   //Выходим из режима редактирования эскиза
-
-
-            //Выдавливание
-
-            #region Константы для выдавливания
-
-    
-            const int o3d_baseExtrusion = 24;        //Выдавливание
-            const int vm_Shaded = 3;     //  полутоновое изображение модели
-            const int etBlind = 0;     //Выдавливание на глубину 
-            #endregion
-
-           
-            ksEntity EntityExtrusion = _part.NewEntity(o3d_baseExtrusion);                           //Получаем интерфейс объекта "операция выдавливание"
-            
-            ksBaseExtrusionDefinition BaseExtrusionDefinition = EntityExtrusion.GetDefinition();    //Получаем интерфейс параметров операции "выдавливание
-
-            BaseExtrusionDefinition.SetSideParam(true, etBlind, lengthBracing, 0, true);                    //Устанавливаем параметры операции выдавливания
-
-            BaseExtrusionDefinition.SetSketch(Entity);                                              //Устанавливаем эскиз операции выдавливания
-          
-            EntityExtrusion.Create();                                                                //Создаем операцию выдавливания
-
-            _doc3D.drawMode = vm_Shaded;                                                              //Устанавливаем полутоновое изображение модели
-       
-            _doc3D.shadedWireframe = true;                                                            //Включаем отображение каркаса
-
-
-
-
-            //Эскиз крепления 
-
-            ///Смещение плоскости
-
-            ksEntity PlaneOffSet = _part.NewEntity(o3d_planeOffset);                              //Включаем отображение каркаса
-            ksPlaneOffsetDefinition planeOffDefinition = PlaneOffSet.GetDefinition();         //Получаем интерфейс параметров смещенной плоскости
-            planeOffDefinition.direction = true;                                            //Направление смещения - прямое 
-            planeOffDefinition.offset = lengthLeg + lengthHead+lengthBracing;                                  //Смещение
-            planeOffDefinition.SetPlane(EntityPlane);                                       //Устанавливаем базовую плоскост
-            PlaneOffSet.Create();                                                                 //Создаем эскиз
-
-            
-
-            ksEntity EntityRectangle = _part.NewEntity(o3d_sketch);                                      ////Получаем интерфейс объекта "Эскиз"
-            ksSketchDefinition sketchDefinitionRectangle = EntityRectangle.GetDefinition();                         //Получаем интерфейс параметров эскиза 
-            sketchDefinitionRectangle.SetPlane(PlaneOffSet);                                                  //Устанавливаем смещенную плоскость базовой для эскиза
-            EntityRectangle.Create();                                                                       //Создаем эскиз
-            ksDocument2D Document2 = sketchDefinitionRectangle.BeginEdit();                               //Входим в режим редактирования эскиз
+            //Эскиз 
+            ksEntity EntityRectangle = _part.NewEntity(sketch);
+            ksSketchDefinition sketchDefinitionRectangle = EntityRectangle.GetDefinition();
+            sketchDefinitionRectangle.SetPlane(PlaneOffSet);
+            EntityRectangle.Create();
+            ksDocument2D Document2 = sketchDefinitionRectangle.BeginEdit();
             ksRectangleParam _par;
-            _par = _kompas.GetParamStruct(ko_RectangleParam);                                       //Получаем интерфейс параметров прямоугольника 
-
+            _par = _kompas.GetParamStruct(rectangleParam);
             _par.height = diameterBracing / 2;
             _par.width = diameterBracing;
             _par.x = -(diameterBracing / 2);
@@ -323,380 +243,209 @@ namespace ShaftApp
             _par.ang = 0;
             _par.style = 1;
             Document2.ksRectangle(_par, 0);
-            sketchDefinitionRectangle.EndEdit();                                                             //Выходим из режима редактирования эскиза
+            sketchDefinitionRectangle.EndEdit();
 
-
-
-
-            //Выдавливание крепления 
-
-            #region Константы для выдавливания
-            const int o3d_cutExtrusion = 26;      //Выдавливание
-            #endregion
-
-            ksEntity EntityCutExtrusion = _part.NewEntity(o3d_cutExtrusion);                            //Получаем интерфейс объекта "операция вырезание выдавливанием"   
-
-            ksCutExtrusionDefinition CutExtrusionDefinition = EntityCutExtrusion.GetDefinition();       //Получаем интерфейс параметров операции 
-
-            CutExtrusionDefinition.cut = true;                                                          //Вычитание элементов ,
-             
-            CutExtrusionDefinition.directionType = 0;                                                   //Прямое направление 
-              
-            CutExtrusionDefinition.SetSideParam(true, etBlind, lengthBracing / 2, 0, false);             //Устанавливаем параметры выдавливания  
-          
-            CutExtrusionDefinition.SetSketch(EntityRectangle);                                                   //Устанавливаем экиз операции   
-        
-            EntityCutExtrusion.Create();                                                                 //Создаем операцию вырезания выдавливанием 
-
-            _doc3D.drawMode = vm_Shaded;                                                                 //Устанавливаем полутоновое изображение модели
-            _doc3D.shadedWireframe = true;                                                               //Включаем отображение каркаса
-
-
-
-            //Эскиз отверстия крепения 
-
-            #region Константы для эскиза
-
-        
-            const int o3d_planeXOZ = 2;    // Плоскость XOZ.
-
-            #endregion
-
-
-            _part = _doc3D.GetPart(pTop_part);                                                          //Получаем интерфейс 3D-модели 
-
-            ksEntity EntityPlane3 = _part.GetDefaultEntity(o3d_planeXOZ);                               //Получаем интерфейс объекта "плоскость XOZ"
-
-
-            ///Смещение плоскости
-
-
-            ksEntity PlaneOffHole = _part.NewEntity(o3d_planeOffset);                                      //Получаем интерфейс объекта "смещенная плоскость
-            ksPlaneOffsetDefinition planeOffsetDefinitionHole = PlaneOffHole.GetDefinition();                 //Получаем интерфейс параметров смещенной плоскости
-            planeOffsetDefinitionHole.direction = true;                                                   //Направление смещения - прямое 
-            planeOffsetDefinitionHole.offset = diameterBracing / 2;                                               //Смещение 
-            planeOffsetDefinitionHole.SetPlane(EntityPlane3);                                               //Устанавливаем базовую плоскость
-            PlaneOffHole.Create();                                                                         //Создаем смещенную плоскость 
-
-
-
-
-            ksEntity EntityHole = _part.NewEntity(o3d_sketch);                                             ////Получаем интерфейс объекта "Эскиз"
-            ksSketchDefinition sketchDefinitionHole = EntityHole.GetDefinition();                              //Получаем интерфейс параметров эскиза
-            sketchDefinitionHole.SetPlane(PlaneOffHole);                                                       //Устанавливаем смещенную плоскость базовой для эскиза 
-            EntityHole.Create();                                                                               //Создаем эскиз 
-            ksDocument2D Document2D3 = sketchDefinitionHole.BeginEdit();                                       //Входим в режим редактирования эскиза 
-
-           
-            Document2D3.ksCircle(0, -(0.75*lengthBracing+lengthLeg+lengthHead), diameterBracing / 6, 1);    //Строим окружность 
-            sketchDefinitionHole.EndEdit();                                                                    //Выходим из режима редактирования эскиза
-
-
-
-
-            //Выдавливание отверстия крепления
-
-            
-
-            ksEntity EntityCutExtrusionHole = _part.NewEntity(o3d_cutExtrusion);                               //Получаем интерфейс объекта "операция вырезание выдавливанием" 
-   
-            ksCutExtrusionDefinition CutExtrusionDefinitionHole = EntityCutExtrusionHole.GetDefinition();         //Получаем интерфейс параметров операции
-            
-            CutExtrusionDefinitionHole.cut = true;                                                             //Вычитание элементов  
-           
-            CutExtrusionDefinitionHole.directionType = 0;                                                      //Прямое направление 
-            
-            CutExtrusionDefinitionHole.SetSideParam(true, etBlind, diameterBracing, 0, false);                         //Устанавливаем параметры выдавливания   
-           
-            CutExtrusionDefinitionHole.SetSketch(EntityHole);                                                      //Устанавливаем экиз операции   
-           
-            EntityCutExtrusionHole.Create();                                                                    //Создаем операцию вырезания выдавливанием 
-
-            _doc3D.drawMode = vm_Shaded;                                                                     //Устанавливаем полутоновое изображение модели
-          
-            _doc3D.shadedWireframe = true;                                                                   //Включаем отображение каркаса
-
-
+            //Вырезание
+            ksEntity EntityCutExtrusion = _part.NewEntity(cutExtrusion);
+            ksCutExtrusionDefinition CutExtrusionDefinition = EntityCutExtrusion.GetDefinition();
+            CutExtrusionDefinition.cut = true;
+            CutExtrusionDefinition.directionType = 0;
+            CutExtrusionDefinition.SetSideParam(true, etBlind, lengthBracing / 2, 0, false);
+            CutExtrusionDefinition.SetSketch(EntityRectangle);
+            EntityCutExtrusion.Create();
+            _doc3D.drawMode = shaded;
+            _doc3D.shadedWireframe = true;
         }
-
 
         /// <summary>
-        ///Создание фаски 
+        /// Создание отверстия крепления
         /// </summary>
-        /// 
-        private void BuildChamfer(double diameter, double diamete)
-
+        /// <param name="diameterBracing">Диаметр крепления</param>
+        /// <param name="lengthBracing">Длина крепления</param>
+        /// <param name="lengthLeg">Длина ножки</param>
+        /// <param name="lengthHead">Длина головки</param>
+        private void BuildBracingHole(double diameterBracing, double lengthBracing, double lengthLeg, double lengthHead)
         {
-
-            #region Константы для фаски
-    
-            const int o3d_face = 6;         //Поверхность
-      
-            const int o3d_chamfer = 33;      // Фаска
-          
-            double index = 1.6;             //Устанавливаем tg 45 
+            #region Константы отверстия крепления
+            const int part = -1;
+            const int sketch = 5;
+            const int planeXOY = 1;
+            const int planeOffset = 14;
+            const int shaded = 3;
+            const int etBlind = 0;
+            const int planeXOZ = 2;
+            const int cutExtrusion = 26;
             #endregion
 
-   
+            ksEntity EntityPlane = _part.GetDefaultEntity(planeXOY);
+            _part = _doc3D.GetPart(part);
+            ksEntity EntityPlane3 = _part.GetDefaultEntity(planeXOZ);
 
-            ksEntity EntityChamferIn = (_part.NewEntity(o3d_chamfer));                                           //Получаем интерфейс объекта "фаска"
+            //Смещение плоскости
+            ksEntity PlaneOffHole = _part.NewEntity(planeOffset);
+            ksPlaneOffsetDefinition planeOffsetDefinitionHole = PlaneOffHole.GetDefinition();
+            planeOffsetDefinitionHole.direction = true;
+            planeOffsetDefinitionHole.offset = diameterBracing / 2;
+            planeOffsetDefinitionHole.SetPlane(EntityPlane3);
+            PlaneOffHole.Create();
 
-            ksChamferDefinition ChamferDefinitionIn = EntityChamferIn.GetDefinition();                          //Получаем интерфейс параметров объекта 
-          
-            ChamferDefinitionIn.tangent = false;                                                                //Не продолжать по касательным ребрам
-     
-            ChamferDefinitionIn.SetChamferParam(true, diameter - diamete, (diameter - diamete) / index);       //Устанавливаем параметры фаски 
+            //Эскиз отверстия крепения 
+            ksEntity EntityHole = _part.NewEntity(sketch);
+            ksSketchDefinition sketchDefinitionHole = EntityHole.GetDefinition();
+            sketchDefinitionHole.SetPlane(PlaneOffHole);
+            EntityHole.Create();
+            ksDocument2D DocumentHole = sketchDefinitionHole.BeginEdit();
+            DocumentHole.ksCircle(0, -(0.75 * lengthBracing + lengthLeg + lengthHead), diameterBracing / 6, 1);
+            sketchDefinitionHole.EndEdit();
 
-            ksEntityCollection EntityCollectionPart = (_part.EntityCollection(o3d_face));                       //Получаем массив поверхностей детали
-
-            ksEntityCollection EntityCollectionChamferIn = (ChamferDefinitionIn.array());                       //Получаем массив поверхностей, на которых будет строиться фаска
-
-            EntityCollectionChamferIn.Clear();
-
-                                                                                                                  //Заполняем массив поверхностей, на которых будет строится фаска
-
-            EntityCollectionChamferIn.Add(EntityCollectionPart.GetByIndex(1));
-           
-
-            EntityCollectionChamferIn.Add(EntityCollectionPart.GetByIndex(4));
-     
-            EntityChamferIn.Create();                                                                                   //Создаем фаску
-
+            //Выдавливание отверстия крепления
+            ksEntity EntityCutExtrusionHole = _part.NewEntity(cutExtrusion);
+            ksCutExtrusionDefinition CutExtrusionDefinitionHole = EntityCutExtrusionHole.GetDefinition();
+            CutExtrusionDefinitionHole.cut = true;
+            CutExtrusionDefinitionHole.directionType = 0;
+            CutExtrusionDefinitionHole.SetSideParam(true, etBlind, diameterBracing, 0, false);
+            CutExtrusionDefinitionHole.SetSketch(EntityHole);
+            EntityCutExtrusionHole.Create();
+            _doc3D.drawMode = shaded;
+            _doc3D.shadedWireframe = true;
         }
 
-
-    /// <summary>
-    /// Резьба
-    /// </summary>
-  
-  
-        private void BuildThread(double diameterHead, double lengthHead, double diameterLeg)//,double length
+     /// <summary>
+     /// Создание резьбы на головке
+     /// </summary>
+     /// <param name="diameterHead">Диамтр головки</param>
+     /// <param name="lengthHead">Длина головки</param>
+     /// <param name="diameterLeg">Диаметр ножки</param>
+        private void BuildThreadHead(double diameterHead, double lengthHead, double diameterLeg)//,double length
         {
-
-
             #region Константы для резьбы
-
-            const int pTop_part = -1;  // Главный компонент, в составе которо­го находится новый или редактируе­мый компонент.
-            const int o3d_cylindricSpiral = 56; // Указывает на цилиндрическую спираль
-            const int o3d_planeXOY = 1;
-            const int o3d_planeOffset = 14;
-
-            const int o3d_planeXOZ = 2;
-            const int o3d_sketch = 5;
-            const int o3d_cutEvolution = 47;
-
+            const int part = -1; 
+            const int cylindricspiral = 56;
+            const int planeXOY = 1;
+            const int planeOffset = 14;
+            const int planeXOZ = 2;
+            const int sketch = 5;
+            const int cutEvolution = 47;
             #endregion
 
-
-            _part = _doc3D.GetPart(pTop_part);                                                              //Получаем интерфейс 3D-модели 
-
-            ksEntity ksEntity = _part.NewEntity(o3d_planeXOZ);
-            
-            ksEntity entityDrawOffset = _part.NewEntity(o3d_planeOffset);
-
+            //Смещение плоскости
+            _part = _doc3D.GetPart(part);                                                          
+            ksEntity ksEntity = _part.NewEntity(planeXOZ);           
+            ksEntity entityDrawOffset = _part.NewEntity(planeOffset);
             ksPlaneOffsetDefinition planeDefinition = entityDrawOffset.GetDefinition();
-
             planeDefinition.offset = 0;
-
             planeDefinition.direction = false;
-
-            ksEntity EntityPlaneOffset = _part.GetDefaultEntity(o3d_planeXOY);
-
+            ksEntity EntityPlaneOffset = _part.GetDefaultEntity(planeXOY);
             planeDefinition.SetPlane(EntityPlaneOffset);
-
             entityDrawOffset.Create();
-           
 
-            //Построение спирали  
-
-            ksEntity entityCylinderic = _part.NewEntity(o3d_cylindricSpiral);                           //Получаем интерфейс объекта "Цилиндрическая спираль"
-
-            ksCylindricSpiralDefinition cylindricSpiral = entityCylinderic.GetDefinition();             //Получаем интерфейс параметров цилиндрической спирали
-
-            cylindricSpiral.SetPlane(entityDrawOffset);                                                 //Получаем базовую плоскость цилиндрической спирали по смещенной плоскости
-
-
+            //Построение спирали 
+            ksEntity entityCylinderic = _part.NewEntity(cylindricspiral);                       
+            ksCylindricSpiralDefinition cylindricSpiral = entityCylinderic.GetDefinition();         
+            cylindricSpiral.SetPlane(entityDrawOffset);                                           
             cylindricSpiral.buildDir = true;
-
-            cylindricSpiral.buildMode = 1;                                                             //Задаем тип построения спирали (Шаг и высота)
-
-            cylindricSpiral.height = lengthHead;                                                            //Задаем высоту спирали 
-
-            cylindricSpiral.diam = diameterHead;                                                            //Задаем диаметр спирали
-
-            cylindricSpiral.firstAngle = 0;                                                              //Задаем начальный угол спирали
-
-            cylindricSpiral.turnDir = true;                                                             //Задаем направление навивки спирали (по часовой)
-
-            cylindricSpiral.step = 0.5;                                                                 //Инициализируем шаг резбы спирали
-
-            entityCylinderic.Create();                                                                   //Создаем спирал
-
-          //  Эскиз треуголника
-
-            _entity = _part.NewEntity(o3d_sketch);
+            cylindricSpiral.buildMode = 1;                                                          
+            cylindricSpiral.height = lengthHead;                                                    
+            cylindricSpiral.diam = diameterHead;                                                    
+            cylindricSpiral.firstAngle = 0;                                                         
+            cylindricSpiral.turnDir = true;                                                         
+            cylindricSpiral.step = 0.5;                                                             
+            entityCylinderic.Create();  
+            
+            //  Эскиз треуголника
+            _entity = _part.NewEntity(sketch);
             ksSketchDefinition sketchDefinition = _entity.GetDefinition();
-            ksEntity Entity = _part.GetDefaultEntity(o3d_planeXOZ);
+            ksEntity Entity = _part.GetDefaultEntity(planeXOZ);
             sketchDefinition.SetPlane(ksEntity);
             _entity.Create();
-
-
 
             Document2D document2D = sketchDefinition.BeginEdit();
             var StartX = diameterHead / 2 -(diameterHead/100); //
             var StartY = - 0.5 / 2 + 0.01;
-         
-    
             document2D.ksLineSeg(StartX, 0, diameterHead-StartX,StartY, 1);
             document2D.ksLineSeg(StartX, 0, diameterHead - StartX, -StartY, 1);
             document2D.ksLineSeg(diameterHead - StartX, StartY, diameterHead - StartX, -StartY, 1);
-
-         
-
-            //var StartX = diametr1 / 2; //
-            //var StartY = 2 - 0.5 / 2 + 0.01;
-            //var Length = 0.5 * 0.5 * (60.0 * Math.PI / 180.0);
-
-            //document2D.ksLineSeg(StartX, 0, xStart + Length, StartY, 1);
-            //document2D.ksLineSeg(StartX, 0, xStart + Length, -StartY, 1);
-            //document2D.ksLineSeg(xStart + Length, StartY, xStart + Length, -StartY, 1);
-
             sketchDefinition.EndEdit();
 
-
-
             //Кинематическое вырезание
-
-            ksEntity entityCutEvolution = _part.NewEntity(o3d_cutEvolution);                             //Получаем интерфейс операции кинематического вырезания
-
-            ksCutEvolutionDefinition cutEvolutionDefinition = entityCutEvolution.GetDefinition();       //Получаем интерфейс параметров операции кинематического вырезания
-
-            cutEvolutionDefinition.cut = true;                                                           //Вычитане объектов 
-
-            cutEvolutionDefinition.sketchShiftType = 1;                                                 //Тип движения (сохранение исходного угла направляющей)
-
-            cutEvolutionDefinition.SetSketch(sketchDefinition);                                          //Устанавливаем эскиз сечения
-
-            ksEntityCollection EntityCollection = (cutEvolutionDefinition.PathPartArray());             //Получаем массив объектов
+            ksEntity entityCutEvolution = _part.NewEntity(cutEvolution);                       
+            ksCutEvolutionDefinition cutEvolutionDefinition = entityCutEvolution.GetDefinition();  
+            cutEvolutionDefinition.cut = true;                                                     
+            cutEvolutionDefinition.sketchShiftType = 1;                                            
+            cutEvolutionDefinition.SetSketch(sketchDefinition);                                    
+            ksEntityCollection EntityCollection = (cutEvolutionDefinition.PathPartArray());        
             EntityCollection.Clear();
-
-            EntityCollection.Add(entityCylinderic);                                                     //Добавляем в массив эскиз с траекторией (спираль)
-
-            entityCutEvolution.Create();                                                                //Создаем операцию кинематического вырезания
-
+            EntityCollection.Add(entityCylinderic);                                                
+            entityCutEvolution.Create();                                                           
         }
-
-        private void BuildThread2(double diameterLeg, double lengthLeg, double diameterBracing, double lengthHead)
+        
+        /// <summary>
+        /// CСоздание резьбы на ножке
+        /// </summary>
+        /// <param name="diameterLeg">Диаметр ножки</param>
+        /// <param name="lengthLeg">Длина ножки</param>
+        /// <param name="diameterBracing">Диаметр крепления</param>
+        /// <param name="lengthHead">Длина головки</param>
+        private void BuildThreadLeg(double diameterLeg, double lengthLeg, double diameterBracing, double lengthHead)
         {
             #region Константы для резьбы
-
-            const int pTop_part = -1;  // Главный компонент, в составе которо­го находится новый или редактируе­мый компонент.
-            const int o3d_planeOffset = 14;  // Указывает на создание эскиза//Смщение плоскости
-            const int o3d_sketch = 5;//Указывает на создание эскиза.
-            const int o3d_planeXOY = 1;   // Указывает на работу в плостости XOY.
-            const int o3d_cylindricSpiral = 56;// Указывает на цилиндрическую спираль
-           
-            const int o3d_cutEvolution = 47; // Указывает на создание кинематического вырезания
-            const int o3d_planeXOZ = 2;
-   
+            const int part = -1;               
+            const int planeOffset = 14;         
+            const int sketch = 5;               
+            const int planeXOY = 1;             
+            const int cylindricspiral = 56;     
+            const int cutEvolution = 47;        
+            const int planeXOZ = 2;
             #endregion
-
-
-            _part = _doc3D.GetPart(pTop_part);//Получаем интерфейс 3D-модели 
-
-
-
-            ksEntity entityOffset = _part.NewEntity(o3d_planeOffset);                       //Получаем интерфейс объекта "смещенная плоскость"
-
-            ksPlaneOffsetDefinition planeDefinition = entityOffset.GetDefinition();             //Получаем интерфейс параметров смещенной плоскости
-
-            planeDefinition.offset = lengthHead;                                                    //Второй случай  //////
-
-            planeDefinition.direction = true;                                                   //Задаем направление смещенной плоскости
-
-            ksEntity EntityPlaneOffset = _part.GetDefaultEntity(o3d_planeXOY);                   //Получаем интерфейс объекта "плоскость XOY"
-
-            planeDefinition.SetPlane(EntityPlaneOffset);                                         //Получаем базовую плоскость смещенной плоскости по "XOY"
-
-            entityOffset.Create();                                                                  //Создаем смещенную плоскость
             
-
+            //Смещенеие плоскости 
+            _part = _doc3D.GetPart(part);
+            ksEntity entityOffset = _part.NewEntity(planeOffset);                     
+            ksPlaneOffsetDefinition planeDefinition = entityOffset.GetDefinition();       
+            planeDefinition.offset = lengthHead;                                          
+            planeDefinition.direction = true;                                             
+            ksEntity EntityPlaneOffset = _part.GetDefaultEntity(planeXOY);            
+            planeDefinition.SetPlane(EntityPlaneOffset);                                  
+            entityOffset.Create();  
+            
             //Построение спирали
-
-
-            ksEntity entityCylinderic = _part.NewEntity(o3d_cylindricSpiral);                       //Получаем интерфейс объекта "Цилиндрическая спираль"
-
-            ksCylindricSpiralDefinition cylindricSpiral = entityCylinderic.GetDefinition();        //Получаем интерфейс параметров цилиндрической спирали
-
-            cylindricSpiral.SetPlane(entityOffset);                                                 //Получаем базовую плоскость цилиндрической спирали по смещенной плоскости
-
+            ksEntity entityCylinderic = _part.NewEntity(cylindricspiral);                   
+            ksCylindricSpiralDefinition cylindricSpiral = entityCylinderic.GetDefinition();     
+            cylindricSpiral.SetPlane(entityOffset);                                             
             cylindricSpiral.buildDir = true;
-
-            cylindricSpiral.buildMode = 1;                                                          //Задаем тип построения спирали (Шаг и высота)
-
-            cylindricSpiral.height = lengthLeg;                                                         //Задаем высоту спирали //////
-
-            cylindricSpiral.diam = diameterLeg;                                                        //Задаем диаметр спирали
-
-            cylindricSpiral.firstAngle = 0;                                                          //Задаем начальный угол спирали 
-
-            cylindricSpiral.turnDir = true;                                                         //Задаем направление навивки спирали (по часовой)
-
-            cylindricSpiral.step = 0.5;                                                             //Инициализируем шаг резбы спирали
-
-
-            entityCylinderic.Create();                                                              //Создаем спираль
+            cylindricSpiral.buildMode = 1;                                                      
+            cylindricSpiral.height = lengthLeg;                                                 
+            cylindricSpiral.diam = diameterLeg;                                                 
+            cylindricSpiral.firstAngle = 0;                                                     
+            cylindricSpiral.turnDir = true;                                                     
+            cylindricSpiral.step = 0.5;                                                          
+            entityCylinderic.Create(); 
             
-            //////Эскиз треуголника
-
-     
-
-            ksEntity Entity2 = _part.NewEntity(o3d_sketch);
-
+            //Эскиз треуголника     
+            ksEntity Entity2 = _part.NewEntity(sketch);
             ksSketchDefinition sketchDefinition = Entity2.GetDefinition();
-
-            ksEntity Entity = _part.GetDefaultEntity(o3d_planeXOZ);
-
-            sketchDefinition.SetPlane(Entity);//entityOffset
+            ksEntity Entity = _part.GetDefaultEntity(planeXOZ);
+            sketchDefinition.SetPlane(Entity);
             Entity2.Create();
 
-
-
             Document2D document2D = sketchDefinition.BeginEdit();
-
             var StartX = diameterLeg / 2 - (diameterLeg / 100); //
-
             var StartY = -0.5 / 2 + 0.01;
-
-
             document2D.ksLineSeg(StartX, -lengthHead, diameterLeg - StartX, -lengthHead + StartY, 1);
             document2D.ksLineSeg(StartX, -lengthHead, diameterLeg - StartX, -lengthHead - StartY, 1);
             document2D.ksLineSeg(diameterLeg - StartX, -lengthHead + StartY, diameterLeg - StartX, -lengthHead - StartY, 1);
-
-
             sketchDefinition.EndEdit();
 
-
-
-            //////Кинематическое вырезание
-
-            ksEntity entityCutEvolution = _part.NewEntity(o3d_cutEvolution);                            //Получаем интерфейс операции кинематического вырезания
-
-            ksCutEvolutionDefinition cutEvolutionDefinition = entityCutEvolution.GetDefinition();           //Получаем интерфейс параметров операции кинематического вырезания
-
-            cutEvolutionDefinition.cut = true;                                                              //Вычитане объектов 
-
-            cutEvolutionDefinition.sketchShiftType = 1;                                                     //Тип движения (сохранение исходного угла направляющей)
-
-            cutEvolutionDefinition.SetSketch(sketchDefinition);                                             //Устанавливаем эскиз сечения
-
-            ksEntityCollection EntityCollection = (cutEvolutionDefinition.PathPartArray());                 //Получаем массив объектов
+            //Кинематическое вырезание
+            ksEntity entityCutEvolution = _part.NewEntity(cutEvolution);                          
+            ksCutEvolutionDefinition cutEvolutionDefinition = entityCutEvolution.GetDefinition();     
+            cutEvolutionDefinition.cut = true;                                                        
+            cutEvolutionDefinition.sketchShiftType = 1;                                               
+            cutEvolutionDefinition.SetSketch(sketchDefinition);                                       
+            ksEntityCollection EntityCollection = (cutEvolutionDefinition.PathPartArray());           
             EntityCollection.Clear();
-
-            EntityCollection.Add(entityCylinderic);                                                         //Добавляем в массив эскиз с траекторией (спираль)
-
-            entityCutEvolution.Create();                                                                     //Создаем операцию кинематического вырезания
-
+            EntityCollection.Add(entityCylinderic);                                                   
+            entityCutEvolution.Create();                                                              
         }
     }
 }
